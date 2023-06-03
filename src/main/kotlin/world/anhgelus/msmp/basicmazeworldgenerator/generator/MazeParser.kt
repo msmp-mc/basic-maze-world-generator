@@ -117,6 +117,6 @@ class MazeParser {
     }
 
     fun genIDFromXZ(x: Int, z: Int): Int {
-        return z*width + x
+        return (z+z/2)*width + (x+x/2)
     }
 }
