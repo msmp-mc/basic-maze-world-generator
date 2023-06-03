@@ -7,6 +7,7 @@ import world.anhgelus.msmp.basicmazeworldgenerator.api.Cell
 import world.anhgelus.msmp.basicmazeworldgenerator.utils.FileHelper
 import world.anhgelus.msmp.msmpcore.utils.config.Config
 import java.io.File
+import java.util.Random
 
 
 class MazeParser {
@@ -90,7 +91,7 @@ class MazeParser {
      * @param z the z coordinate of the chunk
      * @param data the chunk data
      */
-    fun placeCell(x: Int, z: Int, data: ChunkData) {
+    fun placeCell(x: Int, z: Int, data: ChunkData, random: Random) {
         val id = genIDFromXZ(x,z)
         val cell = cells[id]
         for (x in 0..15) {
