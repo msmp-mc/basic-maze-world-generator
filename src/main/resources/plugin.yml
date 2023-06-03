@@ -6,3 +6,6 @@ version: '${version}'
 worlds:
   world:
     generator: BasicMazeWorldGenerator
+depend:
+  - MSMPCore
+  - kotlin-stdlib
