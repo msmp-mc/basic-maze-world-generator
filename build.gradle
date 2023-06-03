@@ -54,6 +54,10 @@ tasks.withType(JavaCompile).configureEach {
     }
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 processResources {
     def props = [version: version]
     inputs.properties props

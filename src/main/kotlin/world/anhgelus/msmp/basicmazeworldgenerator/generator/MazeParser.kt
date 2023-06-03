@@ -91,11 +91,11 @@ class MazeParser {
      * @param z the z coordinate of the chunk
      * @param data the chunk data
      */
-    fun placeCell(x: Int, z: Int, data: ChunkData, random: Random) {
-        if (x > width/2 || z > height/2 || x < -width/2 || z < -height/2) {
+    fun placeCell(chunkX: Int, chunkZ: Int, data: ChunkData, random: Random) {
+        if (chunkX > width/2 || chunkZ > height/2 || chunkX < -width/2 || chunkZ < -height/2) {
             return
         }
-        val id = genIDFromXZ(x,z)
+        val id = genIDFromXZ(chunkX,chunkZ)
         val cell = cells[id]
         for (x in 0..15) {
             for (z in 0..15) {
