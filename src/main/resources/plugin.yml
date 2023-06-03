@@ -3,3 +3,6 @@ main: world.anhgelus.msmp.basicmazeworldgenerator.BasicMazeWorldGenerator
 api-version: 1.19
 author: ["MSMP", "Anhgelus Morhtuuzh"]
 version: '${version}'
+worlds:
+  world:
+    generator: BasicMazeWorldGenerator
