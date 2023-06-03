@@ -92,6 +92,9 @@ class MazeParser {
      * @param data the chunk data
      */
     fun placeCell(x: Int, z: Int, data: ChunkData, random: Random) {
+        if (x > width/2 || z > height/2 || x < -width/2 || z < -height/2) {
+            return
+        }
         val id = genIDFromXZ(x,z)
         val cell = cells[id]
         for (x in 0..15) {
