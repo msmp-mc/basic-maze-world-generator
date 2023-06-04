@@ -55,7 +55,7 @@ class MazeParser {
                 val builder = StringBuilder()
                 if (x != 1) {
                     val previous = line[x-1]
-                    if (previous == ' ') {
+                    if (previous == ' ' || previous == '_') {
                         wWest = false
                     }
                     builder.append(previous)
@@ -66,7 +66,7 @@ class MazeParser {
                 builder.append(char)
                 if (x != line.length -1) {
                     val next = line[x+1]
-                    if (next == ' ') {
+                    if (next == ' ' || next == '_') {
                         wEast = false
                     }
                     builder.append(next)
@@ -78,6 +78,7 @@ class MazeParser {
                     }
                     builder.append(previousLine[x])
                 }
+                BasicMazeWorldGenerator.LOGGER.info("West - South - East - Top")
                 BasicMazeWorldGenerator.LOGGER.info("$builder, $wWest, $wSouth, $wEast, $wTop")
                 // x = 2*(nX-1)
                 // ((x-1)/2)+1 = nX
