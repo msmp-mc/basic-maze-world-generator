@@ -104,6 +104,9 @@ class MazeParser {
             return
         }
         val cell = getCell(chunkX,chunkZ)
+        BasicMazeWorldGenerator.LOGGER.info("Placing cell at $chunkX, $chunkZ")
+        BasicMazeWorldGenerator.LOGGER.info("Datas: ${cell.wallTop} (top), ${cell.wallEast} (east), ${cell.wallSouth}" +
+                " (south), ${cell.wallWest} (west)")
         for (x in 0..15) {
             for (z in 0..15) {
                 for (y in data.minHeight until 64) {
