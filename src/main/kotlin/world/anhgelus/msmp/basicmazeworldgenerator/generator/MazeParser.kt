@@ -46,7 +46,7 @@ class MazeParser {
         width = (lines[0].length - 2)/2
         for ((z, line) in lines.withIndex()) {
             for ((x, char) in line.withIndex()) {
-                if (char == '|' || x%2 == 0) {
+                if (x%2 == 0 && x != 0 && x != line.length -1) {
                     continue
                 }
                 var wSouth = true
@@ -56,7 +56,7 @@ class MazeParser {
                 val builder = StringBuilder()
                 if (x != 1) {
                     val previous = line[x-1]
-                    if (previous == ' ' || previous == '_') {
+                    if (previous != '|') {
                         wWest = false
                     }
                     builder.append(previous)
@@ -67,7 +67,7 @@ class MazeParser {
                 builder.append(char)
                 if (x != line.length -1) {
                     val next = line[x+1]
-                    if (next == ' ' || next == '_') {
+                    if (next != '|') {
                         wEast = false
                     }
                     builder.append(next)
@@ -79,6 +79,7 @@ class MazeParser {
                     }
                     builder.append(previousLine[x])
                 }
+                BasicMazeWorldGenerator.LOGGER.info("--- ---")
                 BasicMazeWorldGenerator.LOGGER.info("West - South - East - Top")
                 BasicMazeWorldGenerator.LOGGER.info("$builder, $wWest, $wSouth, $wEast, $wTop")
                 // x = 2*(nX-1)
@@ -104,8 +105,9 @@ class MazeParser {
             return
         }
         val cell = getCell(chunkX,chunkZ)
+        BasicMazeWorldGenerator.LOGGER.info("---")
         BasicMazeWorldGenerator.LOGGER.info("Placing cell at $chunkX, $chunkZ")
-        BasicMazeWorldGenerator.LOGGER.info("Datas: ${cell.wallTop} (top), ${cell.wallEast} (east), ${cell.wallSouth}" +
+        BasicMazeWorldGenerator.LOGGER.info("Data: ${cell.wallTop} (top), ${cell.wallEast} (east), ${cell.wallSouth}" +
                 " (south), ${cell.wallWest} (west)")
         for (x in 0..15) {
             for (z in 0..15) {
@@ -130,6 +132,7 @@ class MazeParser {
 
     /**
      * Get the cell at the given coordinates
+     *
      * @param x the x coordinate of the chunk
      * @param z the z coordinate of the chunk
      * @throws MazeGeneratorException if the cell is not found
