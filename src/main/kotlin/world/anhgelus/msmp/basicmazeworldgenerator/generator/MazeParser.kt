@@ -52,34 +52,39 @@ class MazeParser {
                 var wEast = true
                 var wWest = true
                 var wTop = true
-                if (char == ' ') {
-                     wSouth = false
+                val builder = StringBuilder()
+                if (x != 1) {
+                    val previous = line[x-1]
+                    if (previous == ' ') {
+                        wWest = false
+                    }
+                    builder.append(previous)
                 }
+                if (char == ' ') {
+                    wSouth = false
+                }
+                builder.append(char)
                 if (x != line.length -1) {
                     val next = line[x+1]
                     if (next == ' ') {
                         wEast = false
                     }
-                }
-                if (x != 0) {
-                    val previous = line[x-1]
-                    if (previous == ' ') {
-                        wWest = false
-                    }
+                    builder.append(next)
                 }
                 if (z != 0) {
                     val previousLine = lines[z-1]
                     if (previousLine[x] == ' ') {
                         wTop = false
                     }
+                    builder.append(previousLine[x])
                 }
+                BasicMazeWorldGenerator.LOGGER.info("$builder, $wWest, $wSouth, $wEast, $wTop")
                 // x = 2*(nX-1)
                 // ((x-1)/2)+1 = nX
                 val nX = ((x-1)/2)
                 val fX = nX - width/2
                 val fZ = z - height/2
                 cells.add(Cell(fX, fZ, wTop, wSouth, wWest, wEast))
-//                BasicMazeWorldGenerator.LOGGER.info("Cell: $fX, $fZ with $x, $z")
             }
         }
         this.cells = cells
@@ -99,10 +104,13 @@ class MazeParser {
         val cell = foundCell(chunkX,chunkZ)
         for (x in 0..15) {
             for (z in 0..15) {
+                for (y in data.minHeight until 64) {
+                    data.setBlock(x, y, z, Material.BLACK_CONCRETE)
+                }
                 if (cell.wallWest || cell.wallTop || cell.wallEast || cell.wallSouth) {
                     for (y in 65..data.maxHeight) {
                         if ((x == 0 && cell.wallSouth) ||
-                            (x == 15 && cell.wallSouth) ||
+                            (x == 15 && cell.wallTop) ||
                             (z == 0 && cell.wallWest) ||
                             (z == 15 && cell.wallEast)
                         ) {
@@ -110,7 +118,6 @@ class MazeParser {
                         }
                     }
                 }
-                data.setBlock(x, 65, z, Material.BLACK_CONCRETE)
             }
         }
     }
