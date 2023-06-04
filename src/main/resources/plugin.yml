@@ -9,3 +9,4 @@ worlds:
 depend:
   - MSMPCore
   - kotlin-stdlib
+load: STARTUP

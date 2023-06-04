@@ -30,6 +30,15 @@ maze:
 Is looking for the maze at this path `foo/bar/maze.txt` inside the **config directory of the plugin**.
 The "real" path will be: `config/BasicMazeWorldGenerator/foo/bar/maze.txt`.
 
+Now, modify the file `bukkit.yml` at the root of your server.
+Add these lines at the bottom of the file:
+```yml
+worlds:
+  YOUR_WORLD_NAME:
+    generator: BasicMazeWorldGenerator
+```
+Don't forget to replace the `YOUR_WORLD_NAME` by the name of your world (by default it's `world`).
+
 ## Technologies
 
 - Kotlin 1.8.21

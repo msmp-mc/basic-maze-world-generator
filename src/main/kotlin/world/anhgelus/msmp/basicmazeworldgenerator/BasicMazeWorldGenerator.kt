@@ -12,7 +12,8 @@ class BasicMazeWorldGenerator: PluginBase() {
     }
 
     override fun enable() {
-
+        INSTANCE = this
+        LOGGER = logger
     }
 
     override fun getDefaultWorldGenerator(worldName: String, id: String?): ChunkGenerator? {
