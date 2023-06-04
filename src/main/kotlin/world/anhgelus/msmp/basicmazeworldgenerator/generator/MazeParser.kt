@@ -6,6 +6,7 @@ import world.anhgelus.msmp.basicmazeworldgenerator.BasicMazeWorldGenerator
 import world.anhgelus.msmp.basicmazeworldgenerator.api.Cell
 import world.anhgelus.msmp.msmpcore.utils.config.Config
 import java.io.File
+import java.io.FileNotFoundException
 import java.nio.file.Files
 import java.util.Random
 
@@ -27,10 +28,10 @@ class MazeParser {
         path = config.get().getString("maze.path","maze.txt")!!
         file = File(plugin.dataFolder.path+ File.separator + path)
         if (!file.canRead()) {
-            throw Exception("Cannot read file: $path")
+            throw FileNotFoundException("Cannot read file: $path")
         }
         if (!file.isFile) {
-            throw Exception("File is not a file: $path")
+            throw FileNotFoundException("File is not a file: $path")
         }
         parse()
     }
@@ -102,7 +103,7 @@ class MazeParser {
         if (!(chunkX in -(width/2)+1 until width/2 && chunkZ in -(height/2)+1 until height/2)) {
             return
         }
-        val cell = foundCell(chunkX,chunkZ)
+        val cell = getCell(chunkX,chunkZ)
         for (x in 0..15) {
             for (z in 0..15) {
                 for (y in data.minHeight until 64) {
@@ -123,12 +124,18 @@ class MazeParser {
         }
     }
 
-    fun foundCell(x: Int, z: Int): Cell {
+    /**
+     * Get the cell at the given coordinates
+     * @param x the x coordinate of the chunk
+     * @param z the z coordinate of the chunk
+     * @throws MazeGeneratorException if the cell is not found
+     */
+    private fun getCell(x: Int, z: Int): Cell {
         for (cell in cells) {
             if (cell.x == x && cell.z == z) {
                 return cell
             }
         }
-        throw Exception("Cell not found at $x, $z")
+        throw MazeGeneratorException("Cell not found at $x, $z")
     }
 }
