@@ -1,6 +1,7 @@
 package world.anhgelus.msmp.basicmazeworldgenerator.generator
 
 import org.bukkit.Material
+import org.bukkit.entity.Player
 import org.bukkit.generator.ChunkGenerator.ChunkData
 import world.anhgelus.msmp.basicmazeworldgenerator.BasicMazeWorldGenerator
 import world.anhgelus.msmp.basicmazeworldgenerator.api.Cell
@@ -43,52 +44,44 @@ class MazeParser {
         val lines = Files.readAllLines(file.toPath())
         val cells = mutableListOf<Cell>()
         height = lines.size -1
-        width = (lines[0].length - 2)/2
+        width = (lines[0].length - 2)/2 + 1
         for ((z, line) in lines.withIndex()) {
+            if (z == 0) {
+                continue
+            }
             for ((x, char) in line.withIndex()) {
-                if (x%2 == 0 && x != 0 && x != line.length -1) {
+                if (x%2 == 0 || char == '|') {
                     continue
                 }
-                var wSouth = true
-                var wEast = true
-                var wWest = true
-                var wTop = true
-                val builder = StringBuilder()
-                if (x != 1) {
-                    val previous = line[x-1]
-                    if (previous != '|') {
-                        wWest = false
-                    }
-                    builder.append(previous)
-                }
-                if (char == ' ') {
-                    wSouth = false
-                }
-                builder.append(char)
-                if (x != line.length -1) {
+                val wSouth = char == '_'
+                var wEast = false
+                var wWest = false
+                var wTop = false
+
+                val previous = line[x-1]
+                if (previous == '|') wWest = true
+
+                if (x != line.length-1) {
                     val next = line[x+1]
-                    if (next != '|') {
-                        wEast = false
-                    }
-                    builder.append(next)
+                    if (next == '|') wEast = true
                 }
-                if (z != 0) {
+
+                if (z != lines.size-1) {
                     val previousLine = lines[z-1]
-                    if (previousLine[x] == ' ') {
-                        wTop = false
-                    }
-                    builder.append(previousLine[x])
+                    if (previousLine[x] == '_') wTop = true
                 }
-                BasicMazeWorldGenerator.LOGGER.info("--- ---")
-                BasicMazeWorldGenerator.LOGGER.info("West - South - East - Top")
-                BasicMazeWorldGenerator.LOGGER.info("$builder, $wWest, $wSouth, $wEast, $wTop")
+
                 // x = 2*(nX-1)
-                // ((x-1)/2)+1 = nX
+                // ((x-1)/2) = nX
                 val nX = ((x-1)/2)
                 val fX = nX - width/2
-                val fZ = z - height/2
+                val fZ = -(z - height/2)
+                BasicMazeWorldGenerator.LOGGER.info("$x $z -> $fX ($nX) $fZ")
                 cells.add(Cell(fX, fZ, wTop, wSouth, wWest, wEast))
             }
+        }
+        if (cells.size != width*height) {
+            throw MazeGeneratorException("Invalid maze size! Expected ${width*height} ($width x $height) cells, got ${cells.size}")
         }
         this.cells = cells
     }
@@ -105,10 +98,6 @@ class MazeParser {
             return
         }
         val cell = getCell(chunkX,chunkZ)
-        BasicMazeWorldGenerator.LOGGER.info("---")
-        BasicMazeWorldGenerator.LOGGER.info("Placing cell at $chunkX, $chunkZ")
-        BasicMazeWorldGenerator.LOGGER.info("Data: ${cell.wallTop} (top), ${cell.wallEast} (east), ${cell.wallSouth}" +
-                " (south), ${cell.wallWest} (west)")
         for (x in 0..15) {
             for (z in 0..15) {
                 for (y in data.minHeight until 65) {
@@ -117,11 +106,11 @@ class MazeParser {
                 if (!(cell.wallWest || cell.wallTop || cell.wallEast || cell.wallSouth)) {
                     continue
                 }
-                for (y in 65..data.maxHeight) {
-                    if ((x == 0 && cell.wallSouth) ||
-                        (x == 15 && cell.wallTop) ||
-                        (z == 0 && cell.wallWest) ||
-                        (z == 15 && cell.wallEast)
+                for (y in 65..data.maxHeight/3) {
+                    if ((z == 0 && cell.wallSouth) ||
+                        (z == 15 && cell.wallTop) ||
+                        (x == 0 && cell.wallWest) ||
+                        (x == 15 && cell.wallEast)
                     ) {
                         data.setBlock(x, y, z, Material.YELLOW_CONCRETE)
                     }
@@ -137,7 +126,7 @@ class MazeParser {
      * @param z the z coordinate of the chunk
      * @throws MazeGeneratorException if the cell is not found
      */
-    private fun getCell(x: Int, z: Int): Cell {
+    fun getCell(x: Int, z: Int): Cell {
         for (cell in cells) {
             if (cell.x == x && cell.z == z) {
                 return cell
