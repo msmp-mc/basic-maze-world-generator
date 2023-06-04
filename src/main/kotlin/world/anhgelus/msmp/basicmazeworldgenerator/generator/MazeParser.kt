@@ -109,18 +109,19 @@ class MazeParser {
                 " (south), ${cell.wallWest} (west)")
         for (x in 0..15) {
             for (z in 0..15) {
-                for (y in data.minHeight until 64) {
+                for (y in data.minHeight until 65) {
                     data.setBlock(x, y, z, Material.BLACK_CONCRETE)
                 }
-                if (cell.wallWest || cell.wallTop || cell.wallEast || cell.wallSouth) {
-                    for (y in 65..data.maxHeight) {
-                        if ((x == 0 && cell.wallSouth) ||
-                            (x == 15 && cell.wallTop) ||
-                            (z == 0 && cell.wallWest) ||
-                            (z == 15 && cell.wallEast)
-                        ) {
-                            data.setBlock(x, y, z, Material.YELLOW_CONCRETE)
-                        }
+                if (!(cell.wallWest || cell.wallTop || cell.wallEast || cell.wallSouth)) {
+                    continue
+                }
+                for (y in 65..data.maxHeight) {
+                    if ((x == 0 && cell.wallSouth) ||
+                        (x == 15 && cell.wallTop) ||
+                        (z == 0 && cell.wallWest) ||
+                        (z == 15 && cell.wallEast)
+                    ) {
+                        data.setBlock(x, y, z, Material.YELLOW_CONCRETE)
                     }
                 }
             }
