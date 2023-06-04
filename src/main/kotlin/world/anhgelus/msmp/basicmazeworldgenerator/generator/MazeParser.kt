@@ -4,9 +4,9 @@ import org.bukkit.Material
 import org.bukkit.generator.ChunkGenerator.ChunkData
 import world.anhgelus.msmp.basicmazeworldgenerator.BasicMazeWorldGenerator
 import world.anhgelus.msmp.basicmazeworldgenerator.api.Cell
-import world.anhgelus.msmp.basicmazeworldgenerator.utils.FileHelper
 import world.anhgelus.msmp.msmpcore.utils.config.Config
 import java.io.File
+import java.nio.file.Files
 import java.util.Random
 
 
@@ -39,13 +39,13 @@ class MazeParser {
      * Parse the file and create a list of cells
      */
     private fun parse() {
-        val content = FileHelper.readFile(file.inputStream())
-        val lines = content.split("\n")
+        val lines = Files.readAllLines(file.toPath())
         val cells = mutableListOf<Cell>()
         height = lines.size -1
+        width = (lines[0].length - 2)/2
         for ((z, line) in lines.withIndex()) {
             for ((x, char) in line.withIndex()) {
-                if (char == '|') {
+                if (char == '|' || x%2 == 0) {
                     continue
                 }
                 var wSouth = true
@@ -60,8 +60,6 @@ class MazeParser {
                     if (next == ' ') {
                         wEast = false
                     }
-                } else {
-                    width = x
                 }
                 if (x != 0) {
                     val previous = line[x-1]
@@ -75,10 +73,13 @@ class MazeParser {
                         wTop = false
                     }
                 }
-                // x = 2*(nX-1) + 1
+                // x = 2*(nX-1)
                 // ((x-1)/2)+1 = nX
-                val nX = ((x-1)/2)+1
-                cells.add(Cell(nX, z, wTop, wSouth, wWest, wEast))
+                val nX = ((x-1)/2)
+                val fX = nX - width/2
+                val fZ = z - height/2
+                cells.add(Cell(fX, fZ, wTop, wSouth, wWest, wEast))
+//                BasicMazeWorldGenerator.LOGGER.info("Cell: $fX, $fZ with $x, $z")
             }
         }
         this.cells = cells
@@ -92,11 +93,10 @@ class MazeParser {
      * @param data the chunk data
      */
     fun placeCell(chunkX: Int, chunkZ: Int, data: ChunkData, random: Random) {
-        if (chunkX > width/2 || chunkZ > height/2 || chunkX < -width/2 || chunkZ < -height/2) {
+        if (!(chunkX in -(width/2)+1 until width/2 && chunkZ in -(height/2)+1 until height/2)) {
             return
         }
-        val id = genIDFromXZ(chunkX,chunkZ)
-        val cell = cells[id]
+        val cell = foundCell(chunkX,chunkZ)
         for (x in 0..15) {
             for (z in 0..15) {
                 if (cell.wallWest || cell.wallTop || cell.wallEast || cell.wallSouth) {
@@ -109,14 +109,18 @@ class MazeParser {
                             data.setBlock(x, y, z, Material.YELLOW_CONCRETE)
                         }
                     }
-                    continue
                 }
                 data.setBlock(x, 65, z, Material.BLACK_CONCRETE)
             }
         }
     }
 
-    fun genIDFromXZ(x: Int, z: Int): Int {
-        return (z+z/2)*width + (x+x/2)
+    fun foundCell(x: Int, z: Int): Cell {
+        for (cell in cells) {
+            if (cell.x == x && cell.z == z) {
+                return cell
+            }
+        }
+        throw Exception("Cell not found at $x, $z")
     }
 }
