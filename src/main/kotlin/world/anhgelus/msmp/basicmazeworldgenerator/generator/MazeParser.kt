@@ -23,7 +23,7 @@ class MazeParser {
 
     init {
         val plugin = BasicMazeWorldGenerator.INSTANCE as BasicMazeWorldGenerator
-        val config = Config(plugin, "config.yml")
+        val config = Config(plugin, "config")
         path = config.get().getString("maze.path","maze.txt")!!
         file = File(plugin.dataFolder.path+ File.separator + path)
         if (!file.canRead()) {
