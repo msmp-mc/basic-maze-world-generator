@@ -76,7 +76,6 @@ class MazeParser {
                 val nX = ((x-1)/2)
                 val fX = nX - width/2
                 val fZ = -(z - height/2)
-                BasicMazeWorldGenerator.LOGGER.info("$x $z -> $fX ($nX) $fZ")
                 cells.add(Cell(fX, fZ, wTop, wSouth, wWest, wEast))
             }
         }
@@ -94,14 +93,26 @@ class MazeParser {
      * @param data the chunk data
      */
     fun placeCell(chunkX: Int, chunkZ: Int, data: ChunkData, random: Random) {
-        if (!(chunkX in -(width/2)+1 until width/2 && chunkZ in -(height/2)+1 until height/2)) {
+        if (!(chunkX in -(width/2) until width/2 && chunkZ in -(height/2) until height/2)) {
             return
         }
         val cell = getCell(chunkX,chunkZ)
         for (x in 0..15) {
             for (z in 0..15) {
                 for (y in data.minHeight until 65) {
-                    data.setBlock(x, y, z, Material.BLACK_CONCRETE)
+                    if (y != 64) {
+                        data.setBlock(x, y, z, Material.STONE_BRICKS)
+                        continue
+                    }
+                    when (random.nextInt(15)) {
+                        1 -> data.setBlock(x, y, z, Material.CHISELED_STONE_BRICKS)
+                        2 -> data.setBlock(x, y, z, Material.CRACKED_STONE_BRICKS)
+                        3 -> data.setBlock(x, y, z, Material.MOSSY_STONE_BRICKS)
+                        4 -> data.setBlock(x, y, z, Material.MOSSY_STONE_BRICKS)
+                        5 -> data.setBlock(x, y, z, Material.MOSSY_STONE_BRICKS)
+                        6 -> data.setBlock(x, y, z, Material.CHISELED_STONE_BRICKS)
+                        else -> data.setBlock(x, y, z, Material.STONE_BRICKS)
+                    }
                 }
                 if (!(cell.wallWest || cell.wallTop || cell.wallEast || cell.wallSouth)) {
                     continue
@@ -112,7 +123,17 @@ class MazeParser {
                         (x == 0 && cell.wallWest) ||
                         (x == 15 && cell.wallEast)
                     ) {
-                        data.setBlock(x, y, z, Material.YELLOW_CONCRETE)
+                        when (random.nextInt(15)) {
+                            1 -> data.setBlock(x, y, z, Material.CRACKED_DEEPSLATE_BRICKS)
+                            2 -> data.setBlock(x, y, z, Material.CRACKED_DEEPSLATE_BRICKS)
+                            3 -> data.setBlock(x, y, z, Material.DEEPSLATE_TILES)
+                            4 -> data.setBlock(x, y, z, Material.DEEPSLATE_TILES)
+                            5 -> data.setBlock(x, y, z, Material.DEEPSLATE_TILES)
+                            6 -> data.setBlock(x, y, z, Material.CHISELED_DEEPSLATE)
+                            7 -> data.setBlock(x, y, z, Material.CRACKED_DEEPSLATE_TILES)
+                            8 -> data.setBlock(x, y, z, Material.POLISHED_DEEPSLATE)
+                            else -> data.setBlock(x, y, z, Material.DEEPSLATE_BRICKS)
+                        }
                     }
                 }
             }
