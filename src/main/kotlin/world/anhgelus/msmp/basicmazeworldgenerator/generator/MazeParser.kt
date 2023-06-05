@@ -117,23 +117,24 @@ class MazeParser {
                 if (!(cell.wallWest || cell.wallTop || cell.wallEast || cell.wallSouth)) {
                     continue
                 }
+                if (!((z == 0 && cell.wallSouth) ||
+                    (z == 15 && cell.wallTop) ||
+                    (x == 0 && cell.wallWest) ||
+                    (x == 15 && cell.wallEast))
+                ) {
+                    continue
+                }
                 for (y in 65..data.maxHeight/3) {
-                    if ((z == 0 && cell.wallSouth) ||
-                        (z == 15 && cell.wallTop) ||
-                        (x == 0 && cell.wallWest) ||
-                        (x == 15 && cell.wallEast)
-                    ) {
-                        when (random.nextInt(15)) {
-                            1 -> data.setBlock(x, y, z, Material.CRACKED_DEEPSLATE_BRICKS)
-                            2 -> data.setBlock(x, y, z, Material.CRACKED_DEEPSLATE_BRICKS)
-                            3 -> data.setBlock(x, y, z, Material.DEEPSLATE_TILES)
-                            4 -> data.setBlock(x, y, z, Material.DEEPSLATE_TILES)
-                            5 -> data.setBlock(x, y, z, Material.DEEPSLATE_TILES)
-                            6 -> data.setBlock(x, y, z, Material.CHISELED_DEEPSLATE)
-                            7 -> data.setBlock(x, y, z, Material.CRACKED_DEEPSLATE_TILES)
-                            8 -> data.setBlock(x, y, z, Material.POLISHED_DEEPSLATE)
-                            else -> data.setBlock(x, y, z, Material.DEEPSLATE_BRICKS)
-                        }
+                    when (random.nextInt(15)) {
+                        1 -> data.setBlock(x, y, z, Material.CRACKED_DEEPSLATE_BRICKS)
+                        2 -> data.setBlock(x, y, z, Material.CRACKED_DEEPSLATE_BRICKS)
+                        3 -> data.setBlock(x, y, z, Material.DEEPSLATE_TILES)
+                        4 -> data.setBlock(x, y, z, Material.DEEPSLATE_TILES)
+                        5 -> data.setBlock(x, y, z, Material.DEEPSLATE_TILES)
+                        6 -> data.setBlock(x, y, z, Material.CHISELED_DEEPSLATE)
+                        7 -> data.setBlock(x, y, z, Material.CRACKED_DEEPSLATE_TILES)
+                        8 -> data.setBlock(x, y, z, Material.POLISHED_DEEPSLATE)
+                        else -> data.setBlock(x, y, z, Material.DEEPSLATE_BRICKS)
                     }
                 }
             }
