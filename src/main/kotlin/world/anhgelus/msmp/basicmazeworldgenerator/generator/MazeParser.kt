@@ -1,8 +1,11 @@
 package world.anhgelus.msmp.basicmazeworldgenerator.generator
 
 import org.bukkit.Material
+import org.bukkit.block.data.BlockData
+import org.bukkit.block.structure.StructureRotation
 import org.bukkit.entity.Player
 import org.bukkit.generator.ChunkGenerator.ChunkData
+import org.bukkit.material.MaterialData
 import world.anhgelus.msmp.basicmazeworldgenerator.BasicMazeWorldGenerator
 import world.anhgelus.msmp.basicmazeworldgenerator.api.Cell
 import world.anhgelus.msmp.msmpcore.utils.config.Config
@@ -138,6 +141,34 @@ class MazeParser {
                     }
                 }
             }
+        }
+        if (!(cell.wallWest || cell.wallTop || cell.wallEast || cell.wallSouth)) {
+            return
+        }
+        if (random.nextInt(30) != 0) {
+            return
+        }
+        Material.CHEST.createBlockData {
+            val x: Int
+            val z: Int
+            if (cell.wallSouth) {
+                it.rotate(StructureRotation.CLOCKWISE_180)
+                x = 16/2
+                z = 0
+            } else if (cell.wallEast) {
+                it.rotate(StructureRotation.CLOCKWISE_90)
+                x = 15
+                z = 16/2
+            } else if (cell.wallWest) {
+                it.rotate(StructureRotation.COUNTERCLOCKWISE_90)
+                x = 0
+                z = 16/2
+            } else {
+                x = 16/2
+                z = 15
+            }
+            data.setBlock(x, 67, z, Material.DEEPSLATE_BRICK_SLAB)
+            data.setBlock(x, 66, z, it)
         }
     }
 
