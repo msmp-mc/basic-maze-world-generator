@@ -5,6 +5,7 @@ import org.bukkit.block.Chest
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import world.anhgelus.msmp.basicmazeworldgenerator.generator.MazeGenerator
 
@@ -47,5 +48,12 @@ class PlayerListener: Listener {
             return
         }
         event.isCancelled = true
+    }
+
+    @EventHandler
+    fun onBlockPosed(event: BlockPlaceEvent) {
+        val loc = event.block.location
+        val y = loc.blockY
+        event.isCancelled = y > (384/3)-3
     }
 }
