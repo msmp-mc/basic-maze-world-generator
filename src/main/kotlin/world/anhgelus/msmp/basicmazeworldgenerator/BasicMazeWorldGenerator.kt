@@ -6,6 +6,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.generator.ChunkGenerator
 import world.anhgelus.msmp.basicmazeworldgenerator.events.MobListener
+import world.anhgelus.msmp.basicmazeworldgenerator.events.PlayerListener
 import world.anhgelus.msmp.basicmazeworldgenerator.generator.MazeGenerator
 import world.anhgelus.msmp.msmpcore.PluginBase
 
@@ -20,6 +21,7 @@ class BasicMazeWorldGenerator: PluginBase() {
         INSTANCE = this
         LOGGER = logger
         Bukkit.getPluginManager().registerEvents(MobListener(), this)
+        Bukkit.getPluginManager().registerEvents(PlayerListener(), this)
     }
 
     override fun getDefaultWorldGenerator(worldName: String, id: String?): ChunkGenerator {
