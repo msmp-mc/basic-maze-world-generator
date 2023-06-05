@@ -104,7 +104,7 @@ class MazeParser {
                         data.setBlock(x, y, z, Material.STONE_BRICKS)
                         continue
                     }
-                    when (random.nextInt(15)) {
+                    when (random.nextInt(15+1)) {
                         1 -> data.setBlock(x, y, z, Material.CHISELED_STONE_BRICKS)
                         2 -> data.setBlock(x, y, z, Material.CRACKED_STONE_BRICKS)
                         3 -> data.setBlock(x, y, z, Material.MOSSY_STONE_BRICKS)
@@ -125,7 +125,7 @@ class MazeParser {
                     continue
                 }
                 for (y in 65..data.maxHeight/3) {
-                    when (random.nextInt(15)) {
+                    when (random.nextInt(15+1)) {
                         1 -> data.setBlock(x, y, z, Material.CRACKED_DEEPSLATE_BRICKS)
                         2 -> data.setBlock(x, y, z, Material.CRACKED_DEEPSLATE_BRICKS)
                         3 -> data.setBlock(x, y, z, Material.DEEPSLATE_TILES)
