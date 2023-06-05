@@ -4,7 +4,9 @@ import org.bukkit.Material
 import org.bukkit.block.Chest
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import world.anhgelus.msmp.basicmazeworldgenerator.generator.MazeGenerator
 
 class PlayerListener: Listener {
     @EventHandler
@@ -21,5 +23,29 @@ class PlayerListener: Listener {
         chest.open()
         val player = event.player
         player.openInventory(chest.blockInventory)
+    }
+
+    @EventHandler
+    fun onBreakBlock(event: BlockBreakEvent) {
+        val loc = event.block.location
+        val x = loc.blockX%16
+        val y = loc.blockY
+        val z = loc.blockZ%16
+        if (y < 65) {
+            event.isCancelled = true
+            return
+        }
+        if (!(x == 0 || x == 15 || z == 0 || z == 15)) {
+            return
+        }
+        val cell = MazeGenerator.mazeParser.getCell(loc.chunk.x, loc.chunk.z)
+        if (!((z == 0 && cell.wallSouth) ||
+            (z == 15 && cell.wallTop) ||
+            (x == 0 && cell.wallWest) ||
+            (x == 15 && cell.wallEast))
+        ) {
+            return
+        }
+        event.isCancelled = true
     }
 }

@@ -6,7 +6,9 @@ import java.util.*
 
 
 class MazeGenerator: ChunkGenerator() {
-    var mazeParser = MazeParser()
+    init {
+        mazeParser = MazeParser()
+    }
     override fun generateNoise(worldInfo: WorldInfo, random: Random, chunkX: Int, chunkZ: Int, chunkData: ChunkData) {
         mazeParser.placeCell(chunkX,chunkZ,chunkData, random)
     }
@@ -37,5 +39,9 @@ class MazeGenerator: ChunkGenerator() {
 
     override fun shouldGenerateStructures(): Boolean {
         return false
+    }
+
+    companion object {
+        lateinit var mazeParser: MazeParser
     }
 }
