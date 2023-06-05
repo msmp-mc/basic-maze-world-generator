@@ -11,6 +11,10 @@ class MazeGenerator: ChunkGenerator() {
         mazeParser.placeCell(chunkX,chunkZ,chunkData, random)
     }
 
+    override fun shouldGenerateMobs(worldInfo: WorldInfo, random: Random, chunkX: Int, chunkZ: Int): Boolean {
+        return false
+    }
+
     override fun shouldGenerateNoise(): Boolean {
         return false
     }
