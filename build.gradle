@@ -1,6 +1,6 @@
 plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'org.jetbrains.kotlin.jvm' version '1.8.21'
-    id 'application'
 }
 
 group = 'world.anhgelus.msmp'
@@ -28,6 +28,16 @@ dependencies {
     compileOnly "org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT"
 
     implementation "com.github.msmp-mc:msmp-core:0.2.0"
+
+    implementation "commons-io:commons-io:2.11.0"
+}
+
+shadowJar {
+    dependencies {
+        include(dependency("commons-io:commons-io:2.11.0"))
+    }
+
+    archiveClassifier.set('')
 }
 
 test {
