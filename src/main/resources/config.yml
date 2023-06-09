@@ -2,5 +2,3 @@
 # Look at this repo for more information: https://github.com/msmp-mc/maze-generator-cli
 maze:
   path: maze.txt
-world:
-  name: world
