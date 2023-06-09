@@ -4,5 +4,9 @@ maze:
   path: maze.txt
   coefficient:
     chest:
-      spawn: 15
+      # The coefficient of chest spawn is the number of wall without chest between two chests (on average)
+      # For example: if the coefficient is 5, there will be 5 walls without chest between two chests -> C W W W W W C W W W W W C ...
+      spawn: 10
+      # The coefficient chest dist describes the quality of loot in the chest
+      # For example: if the coefficient is 200, only tier-one chest will be generated in the first 200 blocks, the tier-two will be added after these 200 blocks, etc...
       dist: 200

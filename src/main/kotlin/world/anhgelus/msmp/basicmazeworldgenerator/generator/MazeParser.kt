@@ -142,7 +142,8 @@ class MazeParser {
         if (!(cell.wallWest || cell.wallTop || cell.wallEast || cell.wallSouth)) {
             return
         }
-        if (random.nextInt(15) != 0) {
+        val coef = Config(BasicMazeWorldGenerator.INSTANCE, "config").get().getConfigurationSection("maze.coefficient")!!
+        if (random.nextInt(coef.getInt("chest.spawn")) != 0) {
             return
         }
         Material.CHEST.createBlockData {
