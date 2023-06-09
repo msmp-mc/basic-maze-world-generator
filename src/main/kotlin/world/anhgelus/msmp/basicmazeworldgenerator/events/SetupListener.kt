@@ -1,6 +1,5 @@
 package world.anhgelus.msmp.basicmazeworldgenerator.events
 
-import org.bukkit.Bukkit
 import org.bukkit.GameRule
 import org.bukkit.Location
 import org.bukkit.Material
