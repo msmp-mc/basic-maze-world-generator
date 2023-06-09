@@ -42,9 +42,17 @@ class PlayerListener: Listener {
     @EventHandler
     fun onBreakBlock(event: BlockBreakEvent) {
         val loc = event.block.location
-        val x = loc.blockX%16
+        val x = if (loc.blockX < 0) {
+            (loc.blockX%16)+16
+        } else {
+            loc.blockX%16
+        }
         val y = loc.blockY
-        val z = loc.blockZ%16
+        val z = if (loc.blockZ < 0) {
+            (loc.blockZ%16)+16
+        } else {
+            loc.blockZ%16
+        }
         if (y < 64) {
             event.isCancelled = true
             return
