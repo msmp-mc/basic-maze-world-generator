@@ -5,7 +5,7 @@ import org.bukkit.World
 import world.anhgelus.msmp.basicmazeworldgenerator.BasicMazeWorldGenerator
 import java.io.File
 import java.io.IOException
-import java.io.InputStream
+import java.nio.file.Paths
 
 object Datapack {
     fun copyInDir(world: World): Boolean {
@@ -13,14 +13,40 @@ object Datapack {
 
         val instance = BasicMazeWorldGenerator.INSTANCE
 
-        instance.saveResource("datapack", true)
+        val mcmeta = instance.getResource("datapack/pack.mcmeta")
+        val one = instance.getResource("datapack/data/tier-one.json")
+        val two = instance.getResource("datapack/data/tier-two.json")
+        val three = instance.getResource("datapack/data/tier-three.json")
+        val four = instance.getResource("datapack/data/tier-four.json")
+        val five = instance.getResource("datapack/data/tier-five.json")
 
-        val datapackFolder = File(worldFolder.path + File.separator + "datapacks")
-        if (!datapackFolder.mkdirs()) return false
-        val packFolder = File(datapackFolder.path + File.separator + "basicmazeworldgenerator")
+        val packFolder = File(worldFolder.path + File.separator + "datapacks" + File.separator + "basicmazeworldgenerator")
+        val chests = File(packFolder.path + File.separator + "data" + File.separator + "basicmazeworldgenerator"
+                + File.separator + "loot_tables" + File.separator + "chests")
         if (!packFolder.mkdirs()) return false
+        if (!chests.mkdirs()) return false
+
+        val mcmetaFile = File(packFolder.path + File.separator + "pack.mcmeta")
+        val oneFile = File(chests.path + File.separator + "tier-one.json")
+        val twoFile = File(chests.path + File.separator + "tier-two.json")
+        val threeFile = File(chests.path + File.separator + "tier-three.json")
+        val fourFile = File(chests.path + File.separator + "tier-four.json")
+        val fiveFile = File(chests.path + File.separator + "tier-five.json")
+
+        if (!mcmetaFile.createNewFile()) return false
+        oneFile.createNewFile()
+        twoFile.createNewFile()
+        threeFile.createNewFile()
+        fourFile.createNewFile()
+        fiveFile.createNewFile()
+
         try {
-            FileUtils.copyDirectory(File(instance.dataFolder.path + File.separator + "datapack"), packFolder)
+            FileUtils.copyInputStreamToFile(mcmeta, mcmetaFile)
+            FileUtils.copyInputStreamToFile(one, oneFile)
+            FileUtils.copyInputStreamToFile(two, twoFile)
+            FileUtils.copyInputStreamToFile(three, threeFile)
+            FileUtils.copyInputStreamToFile(four, fourFile)
+            FileUtils.copyInputStreamToFile(five, fiveFile)
         } catch (e: IOException) {
             BasicMazeWorldGenerator.LOGGER.warning("Failed to copy datapack to world folder, exception: {$e}\n " +
                     "Stacktrace: ${e.stackTrace}")
