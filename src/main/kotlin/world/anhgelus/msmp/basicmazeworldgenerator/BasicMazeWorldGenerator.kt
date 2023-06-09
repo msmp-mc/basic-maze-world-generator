@@ -1,9 +1,6 @@
 package world.anhgelus.msmp.basicmazeworldgenerator
 
 import org.bukkit.Bukkit
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.generator.ChunkGenerator
 import world.anhgelus.msmp.basicmazeworldgenerator.events.MobListener
 import world.anhgelus.msmp.basicmazeworldgenerator.events.PlayerListener

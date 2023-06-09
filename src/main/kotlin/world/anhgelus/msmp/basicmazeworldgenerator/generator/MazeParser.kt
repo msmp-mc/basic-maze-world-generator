@@ -1,18 +1,15 @@
 package world.anhgelus.msmp.basicmazeworldgenerator.generator
 
 import org.bukkit.Material
-import org.bukkit.block.data.BlockData
 import org.bukkit.block.structure.StructureRotation
-import org.bukkit.entity.Player
 import org.bukkit.generator.ChunkGenerator.ChunkData
-import org.bukkit.material.MaterialData
 import world.anhgelus.msmp.basicmazeworldgenerator.BasicMazeWorldGenerator
 import world.anhgelus.msmp.basicmazeworldgenerator.api.Cell
 import world.anhgelus.msmp.msmpcore.utils.config.Config
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Files
-import java.util.Random
+import java.util.*
 
 
 class MazeParser {

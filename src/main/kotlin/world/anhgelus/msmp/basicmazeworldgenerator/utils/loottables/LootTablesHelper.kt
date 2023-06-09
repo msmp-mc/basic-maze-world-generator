@@ -5,7 +5,7 @@ import org.bukkit.Location
 import org.bukkit.NamespacedKey
 import org.bukkit.loot.LootTable
 import world.anhgelus.msmp.basicmazeworldgenerator.BasicMazeWorldGenerator
-import java.util.Random
+import java.util.*
 import kotlin.math.abs
 
 object LootTablesHelper {
