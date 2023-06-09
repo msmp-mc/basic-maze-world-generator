@@ -12,6 +12,5 @@ class SetupListener: Listener {
     fun onWorldGenerationComplete(event: WorldLoadEvent) {
         if (!Datapack.copyInDir(event.world)) BasicMazeWorldGenerator.LOGGER.info("The datapack was not copied to the world folder. " +
                 "It must be a bug if it's the first time you generate the world.")
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "datapack enable \"file/basicmazeworldgenerator\"")
     }
 }
