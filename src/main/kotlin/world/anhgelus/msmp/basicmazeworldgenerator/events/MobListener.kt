@@ -2,6 +2,7 @@ package world.anhgelus.msmp.basicmazeworldgenerator.events
 
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Zombie
+import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntitySpawnEvent
 import org.bukkit.potion.PotionEffect
@@ -11,6 +12,7 @@ import kotlin.math.floor
 import kotlin.math.sqrt
 
 class MobListener: Listener {
+    @EventHandler
     fun onMobSpawn(event: EntitySpawnEvent) {
         if (event.entity.type != EntityType.ZOMBIE) {
             event.isCancelled = true

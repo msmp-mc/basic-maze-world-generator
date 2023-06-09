@@ -2,3 +2,7 @@
 # Look at this repo for more information: https://github.com/msmp-mc/maze-generator-cli
 maze:
   path: maze.txt
+  coefficient:
+    chest:
+      spawn: 15
+      dist: 200

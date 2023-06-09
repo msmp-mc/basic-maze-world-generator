@@ -29,15 +29,15 @@ object LootTablesHelper {
      * @return The loot table
      */
     fun getChestLootTable(blockLoc: Location): LootTable {
-        val dist = floor((sqrt((blockLoc.blockX*blockLoc.blockX - blockLoc.blockZ*blockLoc.blockZ).toDouble())/200)).toInt()
+        val dist = floor((sqrt((blockLoc.blockX*blockLoc.blockX + blockLoc.blockZ*blockLoc.blockZ).toDouble())/200)).toInt()
         println("Dist $dist")
         if (dist < 1) return Bukkit.getLootTable(genKey(LootTablesType.CHEST, "tier-one"))!!
         val rand = Random(blockLoc.world!!.seed)
-        return when(rand.nextInt(dist+1+1)) {
-            1 -> Bukkit.getLootTable(genKey(LootTablesType.CHEST, "tier-one"))!!
-            2 -> Bukkit.getLootTable(genKey(LootTablesType.CHEST, "tier-two"))!!
-            3 -> Bukkit.getLootTable(genKey(LootTablesType.CHEST, "tier-three"))!!
-            4 -> Bukkit.getLootTable(genKey(LootTablesType.CHEST, "tier-four"))!!
+        return when(rand.nextInt(dist+1)) {
+            0 -> Bukkit.getLootTable(genKey(LootTablesType.CHEST, "tier-one"))!!
+            1 -> Bukkit.getLootTable(genKey(LootTablesType.CHEST, "tier-two"))!!
+            2 -> Bukkit.getLootTable(genKey(LootTablesType.CHEST, "tier-three"))!!
+            3 -> Bukkit.getLootTable(genKey(LootTablesType.CHEST, "tier-four"))!!
             else -> Bukkit.getLootTable(genKey(LootTablesType.CHEST, "tier-five"))!!
         }
     }

@@ -104,7 +104,7 @@ class MazeParser {
                         data.setBlock(x, y, z, Material.STONE_BRICKS)
                         continue
                     }
-                    when (random.nextInt(15+1)) {
+                    when (random.nextInt(15)) {
                         1 -> data.setBlock(x, y, z, Material.CHISELED_STONE_BRICKS)
                         2 -> data.setBlock(x, y, z, Material.CRACKED_STONE_BRICKS)
                         3 -> data.setBlock(x, y, z, Material.MOSSY_STONE_BRICKS)
@@ -125,7 +125,7 @@ class MazeParser {
                     continue
                 }
                 for (y in 65..data.maxHeight/3) {
-                    when (random.nextInt(15+1)) {
+                    when (random.nextInt(15)) {
                         1 -> data.setBlock(x, y, z, Material.CRACKED_DEEPSLATE_BRICKS)
                         2 -> data.setBlock(x, y, z, Material.CRACKED_DEEPSLATE_BRICKS)
                         3 -> data.setBlock(x, y, z, Material.DEEPSLATE_TILES)
@@ -142,7 +142,7 @@ class MazeParser {
         if (!(cell.wallWest || cell.wallTop || cell.wallEast || cell.wallSouth)) {
             return
         }
-        if (random.nextInt(30) != 0) {
+        if (random.nextInt(15) != 0) {
             return
         }
         Material.CHEST.createBlockData {
@@ -153,11 +153,11 @@ class MazeParser {
                 x = 16/2
                 z = 0
             } else if (cell.wallEast) {
-                it.rotate(StructureRotation.CLOCKWISE_90)
+                it.rotate(StructureRotation.COUNTERCLOCKWISE_90)
                 x = 15
                 z = 16/2
             } else if (cell.wallWest) {
-                it.rotate(StructureRotation.COUNTERCLOCKWISE_90)
+                it.rotate(StructureRotation.CLOCKWISE_90)
                 x = 0
                 z = 16/2
             } else {
