@@ -21,7 +21,7 @@
         {
           "type": "minecraft:item",
           "weight": 50,
-          "name": "minecraft:waters_bucket"
+          "name": "minecraft:water_bucket"
         },
         {
           "type": "minecraft:item",

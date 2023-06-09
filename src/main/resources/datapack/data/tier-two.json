@@ -155,9 +155,9 @@
           "name": "minecraft:apple"
         },
         {
-          "type": "minecraft:water_bucket",
+          "type": "minecraft:item",
           "weight": 20,
-          "name": "minecraft:apple"
+          "name": "minecraft:water_bucket"
         },
         {
           "type": "minecraft:item",
