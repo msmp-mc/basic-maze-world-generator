@@ -23,8 +23,8 @@ class PlayerListener: Listener {
         if (chest.inventory.size != 0) return
         if (chest.lootTable == null) return
         val player = event.player
-        // set the loot table
-        Bukkit.getLootTable(LootTablesHelper.genKey(LootTablesType.CHEST, "maze"))!!
+        // fill the inventory
+        LootTablesHelper.getChestLootTable(chest.location)
             .fillInventory(chest.blockInventory, Random(player.world.seed), LootContext.Builder(player.location).build())
     }
 
