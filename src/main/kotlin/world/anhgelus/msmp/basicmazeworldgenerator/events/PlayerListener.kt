@@ -73,9 +73,8 @@ class PlayerListener: Listener {
 
     @EventHandler
     fun onBlockPosed(event: BlockPlaceEvent) {
-        val loc = event.block.location
-        val y = loc.blockY
-        event.isCancelled = y > (384/3)-3
+        val y = event.block.location.blockY
+        event.isCancelled = y > 106-3
     }
 
     @EventHandler
