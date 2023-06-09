@@ -1,4 +1,4 @@
-package world.anhgelus.msmp.basicmazeworldgenerator.utils
+package world.anhgelus.msmp.basicmazeworldgenerator.utils.loottables
 
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -9,10 +9,23 @@ import java.util.Random
 import kotlin.math.abs
 
 object LootTablesHelper {
+    /**
+     * Generate a NamespacedKey for a loot table
+     *
+     * @param type The type of loot table
+     * @param name The name of the loot table
+     * @return The NamespacedKey
+     */
     fun genKey(type: LootTablesType, name: String): NamespacedKey {
         return NamespacedKey(BasicMazeWorldGenerator.INSTANCE,"${type.path}/$name")
     }
 
+    /**
+     * Get a loot table for a chest
+     *
+     * @param blockLoc The location of the chest
+     * @return The loot table
+     */
     fun getChestLootTable(blockLoc: Location): LootTable {
         val dist = abs(blockLoc.blockX*blockLoc.blockX - blockLoc.blockZ*blockLoc.blockZ)
         if (dist < 100) return Bukkit.getLootTable(genKey(LootTablesType.CHEST, "tier-one"))!!
