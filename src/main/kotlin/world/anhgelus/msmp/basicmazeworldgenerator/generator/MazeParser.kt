@@ -101,17 +101,23 @@ class MazeParser {
             for (z in 0..15) {
                 for (y in data.minHeight until 65) {
                     if (y != 64) {
-                        data.setBlock(x, y, z, Material.STONE_BRICKS)
+                        data.setBlock(x, y, z, Material.STONE)
                         continue
                     }
-                    when (random.nextInt(15)) {
-                        1 -> data.setBlock(x, y, z, Material.CHISELED_STONE_BRICKS)
+                    when (random.nextInt(20)) {
+                        0 -> data.setBlock(x, y, z, Material.MOSSY_STONE_BRICKS)
+                        1 -> data.setBlock(x, y, z, Material.CRACKED_STONE_BRICKS)
                         2 -> data.setBlock(x, y, z, Material.CRACKED_STONE_BRICKS)
-                        3 -> data.setBlock(x, y, z, Material.MOSSY_STONE_BRICKS)
-                        4 -> data.setBlock(x, y, z, Material.MOSSY_STONE_BRICKS)
-                        5 -> data.setBlock(x, y, z, Material.MOSSY_STONE_BRICKS)
-                        6 -> data.setBlock(x, y, z, Material.CHISELED_STONE_BRICKS)
-                        else -> data.setBlock(x, y, z, Material.STONE_BRICKS)
+                        3 -> data.setBlock(x, y, z, Material.COBBLESTONE)
+                        4 -> data.setBlock(x, y, z, Material.COBBLESTONE)
+                        5 -> data.setBlock(x, y, z, Material.STONE_BRICKS)
+                        6 -> data.setBlock(x, y, z, Material.STONE_BRICKS)
+                        7 -> data.setBlock(x, y, z, Material.STONE_BRICKS)
+                        8 -> data.setBlock(x, y, z, Material.ANDESITE)
+                        9 -> data.setBlock(x, y, z, Material.ANDESITE)
+                        10 -> data.setBlock(x, y, z, Material.ANDESITE)
+                        11 -> data.setBlock(x, y, z, Material.ANDESITE)
+                        else -> data.setBlock(x, y, z, Material.STONE)
                     }
                 }
                 if (!(cell.wallWest || cell.wallTop || cell.wallEast || cell.wallSouth)) {
