@@ -1,11 +1,16 @@
 package world.anhgelus.msmp.basicmazeworldgenerator.generator
 
-import org.bukkit.Material
+import org.bukkit.*
 import org.bukkit.block.structure.StructureRotation
+import org.bukkit.entity.ArmorStand
+import org.bukkit.entity.EntityType
 import org.bukkit.generator.ChunkGenerator.ChunkData
+import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.LeatherArmorMeta
 import world.anhgelus.msmp.basicmazeworldgenerator.BasicMazeWorldGenerator
 import world.anhgelus.msmp.basicmazeworldgenerator.api.Cell
 import world.anhgelus.msmp.basicmazeworldgenerator.utils.ConfigAPI
+import world.anhgelus.msmp.basicmazeworldgenerator.utils.MathRand
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Files
@@ -171,6 +176,7 @@ class MazeParser {
                 x = 16/2
                 z = 15
             }
+            generateArmorStand(data, random, cell)
             data.setBlock(x, 67, z, Material.DEEPSLATE_BRICK_SLAB)
             data.setBlock(x, 66, z, it)
         }
@@ -190,5 +196,97 @@ class MazeParser {
             }
         }
         throw MazeGeneratorException("Cell not found at $x, $z")
+    }
+
+    /**
+     * Generate an armor stand in the cell
+     *
+     * @param data The chunk data
+     * @param random The random
+     * @param cell The cell
+     */
+    private fun generateArmorStand(data: ChunkData, random: Random, cell: Cell) {
+        if (random.nextInt(2) == 0) {
+            return
+        }
+
+        val x: Int
+        val z: Int
+        if (cell.wallSouth) {
+            x = 16/2+1
+            z = 0
+        } else if (cell.wallEast) {
+            x = 15
+            z = 16/2+1
+        } else if (cell.wallWest) {
+            x = 0
+            z = 16/2+1
+        } else {
+            x = 16/2+1
+            z = 15
+        }
+        data.setBlock(x, 67, z, Material.AIR)
+        data.setBlock(x, 66, z, Material.AIR)
+        armorStands.add(SLocation(x, z, cell))
+    }
+
+    data class SLocation(val x: Int, val z: Int, val cell: Cell, var placed: Boolean = false) {
+        fun toLocation(world: World): Location {
+            val x = if (cell.x < 0) {
+                cell.x*16+x
+            } else {
+                x+cell.x*16
+            } + 0.5
+
+            val z = if (cell.z < 0) {
+                cell.z-1*16+z
+            } else {
+                z+cell.z*16
+            } + 0.5
+            return Location(world, x,66.0, z)
+        }
+    }
+
+    companion object {
+        val armorStands = mutableListOf<SLocation>()
+
+        /**
+         * Place the armor stands
+         *
+         * @param world The world
+         */
+        fun placeArmorStands(world: World) {
+            armorStands.forEach {
+                if (it.placed) return@forEach
+                val entity = world.spawnEntity(it.toLocation(world), EntityType.ARMOR_STAND) as ArmorStand
+                val cell = it.cell
+                if (cell.wallSouth) {
+                    entity.setRotation(0f, 0f)
+                } else if (cell.wallEast) {
+                    entity.setRotation(90f, 0f)
+                } else if (cell.wallWest) {
+                    entity.setRotation(-90f, 0f)
+                } else if (cell.wallTop) {
+                    entity.setRotation(180f, 0f)
+                }
+                entity.isInvulnerable = true
+                entity.setArms(true)
+                entity.setBasePlate(false)
+
+                val item = ItemStack(Material.LEATHER_HELMET)
+                val data = item.itemMeta as LeatherArmorMeta
+                val color = when(MathRand.zeroToFour(cell.distToCenter(), Random(world.seed))) {
+                    0 -> DyeColor.WHITE
+                    1 -> DyeColor.GRAY
+                    2 -> DyeColor.GREEN
+                    3 -> DyeColor.BLUE
+                    else -> DyeColor.RED
+                }
+                data.setColor(color.color)
+                item.itemMeta = data
+                entity.equipment!!.helmet = item
+                it.placed = true
+            }
+        }
     }
 }

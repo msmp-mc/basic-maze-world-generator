@@ -21,9 +21,9 @@ class BasicMazeWorldGenerator: PluginBase() {
         INSTANCE = this
         LOGGER = logger
 
-        Bukkit.getPluginManager().registerEvents(MobListener(), this)
-        Bukkit.getPluginManager().registerEvents(PlayerListener(), this)
-        Bukkit.getPluginManager().registerEvents(SetupListener(), this)
+        Bukkit.getPluginManager().registerEvents(MobListener, this)
+        Bukkit.getPluginManager().registerEvents(PlayerListener, this)
+        Bukkit.getPluginManager().registerEvents(SetupListener, this)
     }
 
     override fun getDefaultWorldGenerator(worldName: String, id: String?): ChunkGenerator {

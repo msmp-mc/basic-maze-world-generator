@@ -15,7 +15,7 @@ import world.anhgelus.msmp.basicmazeworldgenerator.utils.loottables.LootTablesHe
 import world.anhgelus.msmp.msmpcore.utils.ChatHelper
 import java.util.*
 
-class PlayerListener: Listener {
+object PlayerListener: Listener {
 
     private val openedChests = mutableSetOf<Chest>()
 
