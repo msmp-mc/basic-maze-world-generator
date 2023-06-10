@@ -16,7 +16,6 @@ class MobListener: Listener {
     fun onMobSpawn(event: EntitySpawnEvent) {
         if (event.entity.type != EntityType.ZOMBIE) {
             if (event.entity.type == EntityType.DROPPED_ITEM) return
-            println(event.entity.type.toString())
             event.isCancelled = true
             return
         }

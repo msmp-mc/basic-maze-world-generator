@@ -31,7 +31,6 @@ object LootTablesHelper {
     fun getChestLootTable(blockLoc: Location): LootTable {
         val coef = ConfigAPI.getConfig("config").get().getConfigurationSection("maze.coefficient")!!
         val dist = floor((sqrt((blockLoc.blockX*blockLoc.blockX + blockLoc.blockZ*blockLoc.blockZ).toDouble())/coef.getInt("chest.dist"))).toInt()
-        println("Dist $dist")
         if (dist < 1) return Bukkit.getLootTable(genKey(LootTablesType.CHEST, "tier-one"))!!
         val rand = Random(blockLoc.world!!.seed)
         return when(rand.nextInt(dist+1)) {
