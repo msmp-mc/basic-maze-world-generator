@@ -5,7 +5,7 @@ import org.bukkit.block.structure.StructureRotation
 import org.bukkit.generator.ChunkGenerator.ChunkData
 import world.anhgelus.msmp.basicmazeworldgenerator.BasicMazeWorldGenerator
 import world.anhgelus.msmp.basicmazeworldgenerator.api.Cell
-import world.anhgelus.msmp.msmpcore.utils.config.Config
+import world.anhgelus.msmp.basicmazeworldgenerator.utils.ConfigAPI
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Files
@@ -25,7 +25,7 @@ class MazeParser {
 
     init {
         val plugin = BasicMazeWorldGenerator.INSTANCE as BasicMazeWorldGenerator
-        val config = Config(plugin, "config")
+        val config = ConfigAPI.getConfig("config")
         path = config.get().getString("maze.path","maze.txt")!!
         file = File(plugin.dataFolder.path+ File.separator + path)
         if (!file.canRead()) {
@@ -142,7 +142,7 @@ class MazeParser {
         if (!(cell.wallWest || cell.wallTop || cell.wallEast || cell.wallSouth)) {
             return
         }
-        val coef = Config(BasicMazeWorldGenerator.INSTANCE, "config").get().getConfigurationSection("maze.coefficient")!!
+        val coef = ConfigAPI.getConfig("config").get().getConfigurationSection("maze.coefficient")!!
         if (random.nextInt(coef.getInt("chest.spawn")) != 0) {
             return
         }
