@@ -5,10 +5,9 @@ import org.bukkit.Location
 import org.bukkit.NamespacedKey
 import org.bukkit.loot.LootTable
 import world.anhgelus.msmp.basicmazeworldgenerator.BasicMazeWorldGenerator
-import world.anhgelus.msmp.basicmazeworldgenerator.utils.ConfigAPI
+import world.anhgelus.msmp.basicmazeworldgenerator.utils.MathRand
 import java.util.*
-import kotlin.math.floor
-import kotlin.math.sqrt
+import kotlin.math.abs
 
 object LootTablesHelper {
     /**
@@ -29,11 +28,8 @@ object LootTablesHelper {
      * @return The loot table
      */
     fun getChestLootTable(blockLoc: Location): LootTable {
-        val coef = ConfigAPI.getConfig("config").get().getConfigurationSection("maze.coefficient")!!
-        val dist = floor((sqrt((blockLoc.blockX*blockLoc.blockX + blockLoc.blockZ*blockLoc.blockZ).toDouble())/coef.getInt("chest.dist"))).toInt()
-        if (dist < 1) return Bukkit.getLootTable(genKey(LootTablesType.CHEST, "tier-one"))!!
-        val rand = Random(blockLoc.world!!.seed)
-        return when(rand.nextInt(dist+1)) {
+        val dist = abs(blockLoc.blockX)+abs(blockLoc.blockZ)
+        return when(MathRand.zeroToFour(dist, Random(blockLoc.world!!.seed))) {
             0 -> Bukkit.getLootTable(genKey(LootTablesType.CHEST, "tier-one"))!!
             1 -> Bukkit.getLootTable(genKey(LootTablesType.CHEST, "tier-two"))!!
             2 -> Bukkit.getLootTable(genKey(LootTablesType.CHEST, "tier-three"))!!

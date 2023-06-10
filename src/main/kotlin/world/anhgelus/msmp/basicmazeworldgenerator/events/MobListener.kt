@@ -8,20 +8,22 @@ import org.bukkit.event.entity.EntitySpawnEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.util.*
+import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.sqrt
 
-class MobListener: Listener {
+object MobListener: Listener {
     @EventHandler
     fun onMobSpawn(event: EntitySpawnEvent) {
         if (event.entity.type != EntityType.ZOMBIE) {
             if (event.entity.type == EntityType.DROPPED_ITEM) return
+            if (event.entity.type == EntityType.ARMOR_STAND) return
             event.isCancelled = true
             return
         }
         val zombie = event.entity as Zombie
         val loc = event.location
-        val dist = sqrt(loc.x * loc.x + loc.z * loc.z)
+        val dist = abs(loc.x) + abs(loc.z)
 
         if (dist < 75) {
             event.isCancelled = true

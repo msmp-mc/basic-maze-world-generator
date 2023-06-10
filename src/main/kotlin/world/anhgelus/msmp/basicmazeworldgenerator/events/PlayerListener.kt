@@ -15,7 +15,7 @@ import world.anhgelus.msmp.basicmazeworldgenerator.utils.loottables.LootTablesHe
 import world.anhgelus.msmp.msmpcore.utils.ChatHelper
 import java.util.*
 
-class PlayerListener: Listener {
+object PlayerListener: Listener {
 
     private val openedChests = mutableSetOf<Chest>()
 
@@ -43,13 +43,13 @@ class PlayerListener: Listener {
     fun onBreakBlock(event: BlockBreakEvent) {
         val loc = event.block.location
         val x = if (loc.blockX < 0) {
-            (loc.blockX%16)+16
+            ((loc.blockX%16)+16)%16
         } else {
             loc.blockX%16
         }
         val y = loc.blockY
         val z = if (loc.blockZ < 0) {
-            (loc.blockZ%16)+16
+            ((loc.blockZ%16)+16)%16
         } else {
             loc.blockZ%16
         }
@@ -58,9 +58,11 @@ class PlayerListener: Listener {
             return
         }
         if (!(x == 0 || x == 15 || z == 0 || z == 15)) {
+            println("x: $x, z: $z")
             return
         }
         val cell = MazeGenerator.mazeParser.getCell(loc.chunk.x, loc.chunk.z)
+        println("${cell.wallSouth} ${cell.wallWest} ${cell.wallTop} ${cell.wallEast}")
         if (!((z == 0 && cell.wallSouth) ||
             (z == 15 && cell.wallTop) ||
             (x == 0 && cell.wallWest) ||
