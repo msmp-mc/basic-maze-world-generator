@@ -2,6 +2,7 @@ package world.anhgelus.msmp.basicmazeworldgenerator
 
 import org.bukkit.Bukkit
 import org.bukkit.generator.ChunkGenerator
+import world.anhgelus.msmp.basicmazeworldgenerator.api.WinningHandler
 import world.anhgelus.msmp.basicmazeworldgenerator.events.MobListener
 import world.anhgelus.msmp.basicmazeworldgenerator.events.PlayerListener
 import world.anhgelus.msmp.basicmazeworldgenerator.events.SetupListener
@@ -24,13 +25,20 @@ class BasicMazeWorldGenerator: PluginBase() {
 
         //TODO: improve this code
         Bukkit.getPluginManager().registerEvents(MobListener, this)
-        //TODO: add config option for win handler
-        Bukkit.getPluginManager().registerEvents(PlayerListener(WinHandler.ONE_WINNER), this)
+        Bukkit.getPluginManager().registerEvents(PlayerListener(getWinHandler()), this)
         Bukkit.getPluginManager().registerEvents(SetupListener, this)
     }
 
     override fun getDefaultWorldGenerator(worldName: String, id: String?): ChunkGenerator {
         return MazeGenerator()
+    }
+
+    private fun getWinHandler(): WinHandler {
+        val id = ConfigAPI.getConfig("config").get().getInt("game.win-condition.id", 0)
+        WinHandler.values().forEach {
+            if (it.id == id) return it
+        }
+        throw IllegalArgumentException("The win handler with id $id doesn't exist!")
     }
 
     companion object: CompanionBase()

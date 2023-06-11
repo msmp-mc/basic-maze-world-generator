@@ -19,7 +19,7 @@ class TimeWinnerHandler: WinningHandler {
     val time: Int
 
     constructor() {
-        time = ConfigAPI.getConfig("config").get().getInt("game.win-condition.time")
+        time = ConfigAPI.getConfig("config").get().getInt("game.win-condition.time", 30)
     }
 
     constructor(time: Int) {
