@@ -12,6 +12,12 @@ maze:
       dist: 200
 game:
   # The condition of winning
-  # 0 = one winner
-  # Others are not implemented yet
-  win-condition: 0
+  win-condition:
+    # 0 = one winner
+    # 1 = after the first winner, other players have 30 seconds to finish the maze
+    # 2 = after the first winner, other players have 1 minute to finish the maze
+    # 3 = after the first winner, other players have 2 minutes to finish the maze
+    # 4 = after the first winner, other players have {TIME} minutes to finish the maze
+    id: 0
+    # The time in seconds for the win-condition 4
+    time: 30
