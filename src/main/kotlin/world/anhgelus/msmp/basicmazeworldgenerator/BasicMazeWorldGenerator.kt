@@ -10,6 +10,7 @@ import world.anhgelus.msmp.basicmazeworldgenerator.generator.MazeGenerator
 import world.anhgelus.msmp.basicmazeworldgenerator.handlers.WinHandler
 import world.anhgelus.msmp.basicmazeworldgenerator.utils.ConfigAPI
 import world.anhgelus.msmp.msmpcore.PluginBase
+import java.util.Collections
 
 class BasicMazeWorldGenerator: PluginBase() {
     override val configHelper = ConfigAPI
@@ -23,10 +24,9 @@ class BasicMazeWorldGenerator: PluginBase() {
         INSTANCE = this
         LOGGER = logger
 
-        //TODO: improve this code
-        Bukkit.getPluginManager().registerEvents(MobListener, this)
-        Bukkit.getPluginManager().registerEvents(PlayerListener(getWinHandler()), this)
-        Bukkit.getPluginManager().registerEvents(SetupListener, this)
+        events.add(MobListener)
+        events.add(PlayerListener)
+        events.add(SetupListener)
     }
 
     override fun getDefaultWorldGenerator(worldName: String, id: String?): ChunkGenerator {
