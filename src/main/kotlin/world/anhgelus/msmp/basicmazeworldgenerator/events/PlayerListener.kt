@@ -6,14 +6,12 @@ import org.bukkit.block.Chest
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.block.BlockEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.loot.LootContext
 import world.anhgelus.msmp.basicmazeworldgenerator.generator.MazeGenerator
 import world.anhgelus.msmp.basicmazeworldgenerator.utils.loottables.LootTablesHelper
-import world.anhgelus.msmp.msmpcore.utils.ChatHelper
-import java.util.*
 
 object PlayerListener: Listener {
 
@@ -27,12 +25,21 @@ object PlayerListener: Listener {
         if (event.clickedBlock?.type != Material.CHEST) return
         val chest = event.clickedBlock!!.state as Chest
         if (chest.lootTable != null) return
+        if (openedChests.contains(chest)) return
+        var x = chest.location.blockX%16
+        var z = chest.location.blockZ%16
+        if (x < 0) {
+           x = (x+16)%16
+        }
+        if (z < 0) {
+            z = (z+16)%16
+        }
+        if (!(x == 0 || z == 0 || x == 15 || z == 15)) return
         for (i in 0 until chest.inventory.size) {
             if (chest.inventory.getItem(i) != null) {
                 return
             }
         }
-        if (openedChests.contains(chest)) return
         // set the loot tables the inventory
         chest.lootTable = LootTablesHelper.getChestLootTable(chest.location)
         chest.update()
@@ -40,8 +47,16 @@ object PlayerListener: Listener {
     }
 
     @EventHandler
-    fun onBreakBlock(event: BlockBreakEvent) {
-        val loc = event.block.location
+    fun onBreakBlock(event: BlockEvent) {
+        if (!(event is BlockBreakEvent || event is BlockPlaceEvent)) {
+            return
+        }
+        val e = if (event is BlockBreakEvent) {
+            event
+        } else {
+            event as BlockPlaceEvent
+        }
+        val loc = e.block.location
         val x = if (loc.blockX < 0) {
             ((loc.blockX%16)+16)%16
         } else {
@@ -54,7 +69,7 @@ object PlayerListener: Listener {
             loc.blockZ%16
         }
         if (y < 64) {
-            event.isCancelled = true
+            e.isCancelled = true
             return
         }
         if (!(x == 0 || x == 15 || z == 0 || z == 15)) {
@@ -68,7 +83,7 @@ object PlayerListener: Listener {
         ) {
             return
         }
-        event.isCancelled = true
+        e.isCancelled = true
     }
 
     @EventHandler
