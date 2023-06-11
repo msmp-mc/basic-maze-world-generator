@@ -13,11 +13,13 @@ import kotlin.math.floor
 import kotlin.math.sqrt
 
 object MobListener: Listener {
+
+    val enabled = mutableListOf(EntityType.ZOMBIE)
+
     @EventHandler
     fun onMobSpawn(event: EntitySpawnEvent) {
         if (event.entity.type != EntityType.ZOMBIE) {
-            if (event.entity.type == EntityType.DROPPED_ITEM) return
-            if (event.entity.type == EntityType.ARMOR_STAND) return
+            if (event.entity.type in enabled) return
             event.isCancelled = true
             return
         }

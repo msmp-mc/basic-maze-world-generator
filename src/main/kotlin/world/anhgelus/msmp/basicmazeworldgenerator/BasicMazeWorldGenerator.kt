@@ -1,6 +1,7 @@
 package world.anhgelus.msmp.basicmazeworldgenerator
 
 import org.bukkit.Bukkit
+import org.bukkit.entity.EntityType
 import org.bukkit.generator.ChunkGenerator
 import world.anhgelus.msmp.basicmazeworldgenerator.events.MobListener
 import world.anhgelus.msmp.basicmazeworldgenerator.events.PlayerListener
@@ -21,6 +22,16 @@ class BasicMazeWorldGenerator: PluginBase() {
     override fun enable() {
         INSTANCE = this
         LOGGER = logger
+
+        MobListener.enabled.add(EntityType.ARMOR_STAND)
+        MobListener.enabled.add(EntityType.DROPPED_ITEM)
+        MobListener.enabled.add(EntityType.ARROW)
+        MobListener.enabled.add(EntityType.SPECTRAL_ARROW)
+        MobListener.enabled.add(EntityType.SPLASH_POTION)
+        MobListener.enabled.add(EntityType.EXPERIENCE_ORB)
+        MobListener.enabled.add(EntityType.THROWN_EXP_BOTTLE)
+        MobListener.enabled.add(EntityType.LIGHTNING)
+        MobListener.enabled.add(EntityType.FALLING_BLOCK)
 
         events.add(MobListener)
         events.add(PlayerListener)
