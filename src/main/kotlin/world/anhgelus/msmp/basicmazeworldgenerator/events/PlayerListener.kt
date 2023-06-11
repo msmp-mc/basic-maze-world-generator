@@ -9,13 +9,13 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.loot.LootContext
+import org.bukkit.event.player.PlayerMoveEvent
 import world.anhgelus.msmp.basicmazeworldgenerator.generator.MazeGenerator
+import world.anhgelus.msmp.basicmazeworldgenerator.handlers.WinHandler
 import world.anhgelus.msmp.basicmazeworldgenerator.utils.loottables.LootTablesHelper
-import world.anhgelus.msmp.msmpcore.utils.ChatHelper
-import java.util.*
+import kotlin.math.abs
 
-object PlayerListener: Listener {
+class PlayerListener(val winHandler: WinHandler): Listener {
 
     private val openedChests = mutableSetOf<Chest>()
 
@@ -61,7 +61,7 @@ object PlayerListener: Listener {
             println("x: $x, z: $z")
             return
         }
-        val cell = MazeGenerator.mazeParser.getCell(loc.chunk.x, loc.chunk.z)
+        val cell = MazeGenerator.parser.getCell(loc.chunk.x, loc.chunk.z)
         println("${cell.wallSouth} ${cell.wallWest} ${cell.wallTop} ${cell.wallEast}")
         if (!((z == 0 && cell.wallSouth) ||
             (z == 15 && cell.wallTop) ||
@@ -85,5 +85,19 @@ object PlayerListener: Listener {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "datapack list")
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "datapack enable \"file/basicmazeworldgenerator\"")
         dpEnabled = true
+    }
+
+    @EventHandler
+    fun onMove(event: PlayerMoveEvent) {
+        val loc = event.to!!
+        val x = abs(loc.blockX)
+        val z = abs(loc.blockZ)
+        val parser = MazeGenerator.parser
+        val w = parser.width*8
+        val h = parser.height*8
+        if (!(x > w || z > h)) {
+            return
+        }
+        winHandler.handler.newWinner(event.player)
     }
 }
