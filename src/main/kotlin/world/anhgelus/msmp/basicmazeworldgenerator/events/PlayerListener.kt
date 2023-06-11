@@ -58,11 +58,9 @@ object PlayerListener: Listener {
             return
         }
         if (!(x == 0 || x == 15 || z == 0 || z == 15)) {
-            println("x: $x, z: $z")
             return
         }
         val cell = MazeGenerator.mazeParser.getCell(loc.chunk.x, loc.chunk.z)
-        println("${cell.wallSouth} ${cell.wallWest} ${cell.wallTop} ${cell.wallEast}")
         if (!((z == 0 && cell.wallSouth) ||
             (z == 15 && cell.wallTop) ||
             (x == 0 && cell.wallWest) ||
