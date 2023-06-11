@@ -52,4 +52,8 @@ abstract class WinningHandler {
         }
         ChatHelper.sendInfo("One of the possible exit was located at x = ${exitLocation.blockX}, z = ${exitLocation.blockZ}")
     }
+
+    protected fun playerFoundExit(player: MPlayer) {
+        ChatHelper.sendSuccess("The player ${player.player.displayName} (${winners.size}) found the exit!")
+    }
 }

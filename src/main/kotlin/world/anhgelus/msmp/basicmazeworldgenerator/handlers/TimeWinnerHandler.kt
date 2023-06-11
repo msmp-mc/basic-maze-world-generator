@@ -31,7 +31,7 @@ class TimeWinnerHandler: WinningHandler {
         player.player.gameMode = GameMode.SPECTATOR
         if (winners.isNotEmpty()) {
             winners[winners.size-1] = player
-            ChatHelper.sendSuccess("The player ${player.player.displayName} (${winners.size}) found the exit!")
+            playerFoundExit(player)
             return
         }
         winners[0] = player
