@@ -10,6 +10,7 @@ import org.bukkit.event.block.BlockEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerPortalEvent
 import world.anhgelus.msmp.basicmazeworldgenerator.generator.MazeGenerator
 import world.anhgelus.msmp.basicmazeworldgenerator.utils.loottables.LootTablesHelper
 
@@ -98,5 +99,10 @@ object PlayerListener: Listener {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "datapack list")
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "datapack enable \"file/basicmazeworldgenerator\"")
         dpEnabled = true
+    }
+
+    @EventHandler
+    fun onDimensionChange(event: PlayerPortalEvent) {
+        event.isCancelled = true
     }
 }
