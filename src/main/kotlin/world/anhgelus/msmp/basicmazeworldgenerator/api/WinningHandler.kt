@@ -37,6 +37,24 @@ abstract class WinningHandler {
         return winners
     }
 
+    /**
+     * Check if the player is already a winner
+     *
+     * @param player The player to check
+     */
+    fun isAlreadyWinner(player: MPlayer): Boolean {
+        return winners.containsValue(player)
+    }
+
+    /**
+     * Check if the player is already a winner
+     *
+     * @param player The player to check
+     */
+    fun isAlreadyWinner(player: Player): Boolean {
+        return winners.containsValue(MPlayerManager.get(player))
+    }
+
     protected open fun end() {
         ChatHelper.sendSuccess("End of the game!")
         if (winners.size == 1) {

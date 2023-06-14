@@ -34,7 +34,7 @@ class BasicMazeWorldGenerator: PluginBase() {
 
         events.add(MobListener)
         events.add(PlayerListener)
-        events.add(SetupListener)
+        events.add(SetupListener(getWinHandler()))
     }
 
     override fun getDefaultWorldGenerator(worldName: String, id: String?): ChunkGenerator {

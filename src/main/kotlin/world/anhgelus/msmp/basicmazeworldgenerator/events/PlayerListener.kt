@@ -10,14 +10,11 @@ import org.bukkit.event.block.BlockEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerPortalEvent
 import world.anhgelus.msmp.basicmazeworldgenerator.generator.MazeGenerator
-import world.anhgelus.msmp.basicmazeworldgenerator.handlers.WinHandler
 import world.anhgelus.msmp.basicmazeworldgenerator.utils.loottables.LootTablesHelper
-import kotlin.math.abs
 
-class PlayerListener(val winHandler: WinHandler): Listener {
+object PlayerListener : Listener {
 
     private val openedChests = mutableSetOf<Chest>()
 
@@ -102,20 +99,6 @@ class PlayerListener(val winHandler: WinHandler): Listener {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "datapack list")
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "datapack enable \"file/basicmazeworldgenerator\"")
         dpEnabled = true
-    }
-
-    @EventHandler
-    fun onMove(event: PlayerMoveEvent) {
-        val loc = event.to!!
-        val x = abs(loc.blockX)
-        val z = abs(loc.blockZ)
-        val parser = MazeGenerator.parser
-        val w = parser.width*8
-        val h = parser.height*8
-        if (!(x > w || z > h)) {
-            return
-        }
-        winHandler.handler.newWinner(event.player)
     }
     
     @EventHandler
