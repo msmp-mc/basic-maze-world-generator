@@ -48,7 +48,16 @@ object PlayerListener : Listener {
     }
 
     @EventHandler
-    fun onBreakBlock(event: BlockEvent) {
+    fun onBreakBlock(event: BlockBreakEvent) {
+        blockEvent(event)
+    }
+
+    @EventHandler
+    fun onPlaceBlock(event: BlockPlaceEvent) {
+        blockEvent(event)
+    }
+
+    private fun blockEvent(event: BlockEvent) {
         if (!(event is BlockBreakEvent || event is BlockPlaceEvent)) {
             return
         }
@@ -78,13 +87,13 @@ object PlayerListener : Listener {
         }
         val cell = MazeGenerator.parser.getCell(loc.chunk.x, loc.chunk.z)
         if (!((z == 0 && cell.wallSouth) ||
-            (z == 15 && cell.wallTop) ||
-            (x == 0 && cell.wallWest) ||
-            (x == 15 && cell.wallEast))
-        ) {
+              (z == 15 && cell.wallTop) ||
+              (x == 0 && cell.wallWest) ||
+              (x == 15 && cell.wallEast))
+            ) {
             return
-        }
         e.isCancelled = true
+        }
     }
 
     @EventHandler
