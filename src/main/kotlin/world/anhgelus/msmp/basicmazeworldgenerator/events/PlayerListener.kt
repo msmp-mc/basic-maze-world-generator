@@ -79,7 +79,7 @@ class PlayerListener(val winHandler: WinHandler): Listener {
         if (!(x == 0 || x == 15 || z == 0 || z == 15)) {
             return
         }
-        val cell = MazeGenerator.mazeParser.getCell(loc.chunk.x, loc.chunk.z)
+        val cell = MazeGenerator.parser.getCell(loc.chunk.x, loc.chunk.z)
         if (!((z == 0 && cell.wallSouth) ||
             (z == 15 && cell.wallTop) ||
             (x == 0 && cell.wallWest) ||
