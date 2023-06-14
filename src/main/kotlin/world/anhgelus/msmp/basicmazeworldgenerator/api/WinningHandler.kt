@@ -13,7 +13,7 @@ abstract class WinningHandler {
     /**
      * Winners list (Place, Player)
      */
-    protected val winners = mutableMapOf<Int, MPlayer>()
+    protected val winners: MutableMap<Int, MPlayer> = mutableMapOf()
 
     protected lateinit var exitLocation: Location
 
@@ -33,7 +33,7 @@ abstract class WinningHandler {
         newWinner(MPlayerManager.get(player))
     }
 
-    fun getWinners(): Map<Int, MPlayer> {
+    fun getWinnersMap(): Map<Int, MPlayer> {
         return winners
     }
 
