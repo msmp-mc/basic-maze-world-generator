@@ -57,20 +57,23 @@ abstract class WinningHandler {
 
     protected open fun end() {
         ChatHelper.sendSuccess("End of the game!")
-        if (winners.size == 1) {
-            ChatHelper.sendSuccess("The winner is ${winners[0]!!.player.displayName}!")
-           return
-        }
-        ChatHelper.sendSuccess("And the winners are:")
-        winners.forEach {
-            ChatHelper.send("${ChatColor.RESET}${it.key}- ${ChatHelper.success}${it.value.player.displayName}")
-            it.value.player.sendTitle("You win!", "Your place: ${it.key}", 0, 40, 0)
-        }
         Bukkit.getOnlinePlayers().forEach {
             it.gameMode = GameMode.SPECTATOR
             if (!winners.containsValue(MPlayerManager.get(it))) {
                 it.sendTitle("You lose!", "", 0, 40, 0)
             }
+        }
+        if (winners.size == 1) {
+            val winner = winners[0]!!
+            ChatHelper.sendSuccess("The winner is ${winner.player.displayName}!")
+            winner.player.sendTitle("You win!", "", 0, 40, 0)
+            winner.player.gameMode = GameMode.CREATIVE
+            return
+        }
+        ChatHelper.sendSuccess("And the winners are:")
+        winners.forEach {
+            ChatHelper.send("${ChatColor.RESET}${it.key}- ${ChatHelper.success}${it.value.player.displayName}")
+            it.value.player.sendTitle("You win!", "Your place: ${it.key}", 0, 40, 0)
         }
         ChatHelper.sendInfo("One of the possible exit was located at x = ${exitLocation.blockX}, z = ${exitLocation.blockZ}")
     }
