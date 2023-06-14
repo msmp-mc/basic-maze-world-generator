@@ -1,9 +1,7 @@
 package world.anhgelus.msmp.basicmazeworldgenerator
 
-import org.bukkit.Bukkit
 import org.bukkit.entity.EntityType
 import org.bukkit.generator.ChunkGenerator
-import world.anhgelus.msmp.basicmazeworldgenerator.api.WinningHandler
 import world.anhgelus.msmp.basicmazeworldgenerator.events.MobListener
 import world.anhgelus.msmp.basicmazeworldgenerator.events.PlayerListener
 import world.anhgelus.msmp.basicmazeworldgenerator.events.SetupListener
@@ -11,7 +9,6 @@ import world.anhgelus.msmp.basicmazeworldgenerator.generator.MazeGenerator
 import world.anhgelus.msmp.basicmazeworldgenerator.handlers.WinHandler
 import world.anhgelus.msmp.basicmazeworldgenerator.utils.ConfigAPI
 import world.anhgelus.msmp.msmpcore.PluginBase
-import java.util.Collections
 
 class BasicMazeWorldGenerator: PluginBase() {
     override val configHelper = ConfigAPI
