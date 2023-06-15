@@ -232,18 +232,7 @@ class MazeParser {
 
     data class SLocation(val x: Int, val z: Int, val cell: Cell, var placed: Boolean = false) {
         fun toLocation(world: World): Location {
-            val x = if (cell.x < 0) {
-                cell.x*16+x
-            } else {
-                x+cell.x*16
-            } + 0.5
-
-            val z = if (cell.z < 0) {
-                cell.z-1*16+z
-            } else {
-                z+cell.z*16
-            } + 0.5
-            return Location(world, x,66.0, z)
+            return cell.relativeToAbsoluteLocation(world, x.toFloat(), 66f, z.toFloat())
         }
     }
 
