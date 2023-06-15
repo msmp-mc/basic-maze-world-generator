@@ -10,3 +10,19 @@ maze:
       # The coefficient chest dist describes the quality of loot in the chest
       # For example: if the coefficient is 200, only tier-one chest will be generated in the first 200 blocks, the tier-two will be added after these 200 blocks, etc...
       dist: 200
+game:
+  # The condition of winning
+  win-condition:
+    # 0 = one winner
+    # 1 = after the first winner, other players have 30 seconds to finish the maze
+    # 2 = after the first winner, other players have 1 minute to finish the maze
+    # 3 = after the first winner, other players have 2 minutes to finish the maze
+    # 4 = after the first winner, other players have {TIME} seconds to finish the maze
+    # 5 = two winners
+    # 6 = three winners
+    # 7 = {NUMBER} winners
+    id: 0
+    # The time in seconds for the win-condition 4
+    time: 30
+    # The number of winners for the win-condition 7
+    number: 1

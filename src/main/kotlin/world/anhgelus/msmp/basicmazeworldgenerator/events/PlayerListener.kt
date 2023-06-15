@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerPortalEvent
 import world.anhgelus.msmp.basicmazeworldgenerator.generator.MazeGenerator
 import world.anhgelus.msmp.basicmazeworldgenerator.utils.loottables.LootTablesHelper
 
-object PlayerListener: Listener {
+object PlayerListener : Listener {
 
     private val openedChests = mutableSetOf<Chest>()
 
@@ -48,7 +48,16 @@ object PlayerListener: Listener {
     }
 
     @EventHandler
-    fun onBreakBlock(event: BlockEvent) {
+    fun onBreakBlock(event: BlockBreakEvent) {
+        blockEvent(event)
+    }
+
+    @EventHandler
+    fun onPlaceBlock(event: BlockPlaceEvent) {
+        blockEvent(event)
+    }
+
+    private fun blockEvent(event: BlockEvent) {
         if (!(event is BlockBreakEvent || event is BlockPlaceEvent)) {
             return
         }
@@ -76,15 +85,15 @@ object PlayerListener: Listener {
         if (!(x == 0 || x == 15 || z == 0 || z == 15)) {
             return
         }
-        val cell = MazeGenerator.mazeParser.getCell(loc.chunk.x, loc.chunk.z)
+        val cell = MazeGenerator.parser.getCell(loc.chunk.x, loc.chunk.z)
         if (!((z == 0 && cell.wallSouth) ||
-            (z == 15 && cell.wallTop) ||
-            (x == 0 && cell.wallWest) ||
-            (x == 15 && cell.wallEast))
-        ) {
+              (z == 15 && cell.wallTop) ||
+              (x == 0 && cell.wallWest) ||
+              (x == 15 && cell.wallEast))
+            ) {
             return
-        }
         e.isCancelled = true
+        }
     }
 
     @EventHandler
@@ -100,7 +109,7 @@ object PlayerListener: Listener {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "datapack enable \"file/basicmazeworldgenerator\"")
         dpEnabled = true
     }
-
+    
     @EventHandler
     fun onDimensionChange(event: PlayerPortalEvent) {
         event.isCancelled = true

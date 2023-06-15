@@ -275,7 +275,7 @@ class MazeParser {
 
                 val item = ItemStack(Material.LEATHER_HELMET)
                 val data = item.itemMeta as LeatherArmorMeta
-                val color = when(MathRand.zeroToFour(cell.distToCenter(), Random(world.seed))) {
+                val color = when(MathRand.zeroToFour(cell.distToCenter(), Random(world.seed+1))) {
                     0 -> DyeColor.WHITE
                     1 -> DyeColor.GRAY
                     2 -> DyeColor.GREEN
