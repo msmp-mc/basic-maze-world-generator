@@ -15,6 +15,7 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Files
 import java.util.*
+import kotlin.math.abs
 
 
 class MazeParser {
@@ -209,7 +210,6 @@ class MazeParser {
         if (random.nextInt(2) == 0) {
             return
         }
-
         val x: Int
         val z: Int
         if (cell.wallSouth) {
@@ -225,6 +225,7 @@ class MazeParser {
             x = 16/2+1
             z = 15
         }
+        if (MazeGenerator.isOutside(abs(x)+1, abs(z)+1)) return
         data.setBlock(x, 67, z, Material.AIR)
         data.setBlock(x, 66, z, Material.AIR)
         armorStands.add(SLocation(x, z, cell))
@@ -247,7 +248,9 @@ class MazeParser {
         fun placeArmorStands(world: World) {
             armorStands.forEach {
                 if (it.placed) return@forEach
-                val entity = world.spawnEntity(it.toLocation(world), EntityType.ARMOR_STAND) as ArmorStand
+                val loc = it.toLocation(world)
+                if (MazeGenerator.isOutside(abs(loc.blockX)+1, abs(loc.blockZ)+1)) return@forEach
+                val entity = world.spawnEntity(loc, EntityType.ARMOR_STAND) as ArmorStand
                 val cell = it.cell
                 if (cell.wallSouth) {
                     entity.setRotation(0f, 0f)

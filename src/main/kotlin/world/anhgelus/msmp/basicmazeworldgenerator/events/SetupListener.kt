@@ -13,7 +13,6 @@ import world.anhgelus.msmp.basicmazeworldgenerator.generator.MazeGenerator
 import world.anhgelus.msmp.basicmazeworldgenerator.generator.MazeParser
 import world.anhgelus.msmp.basicmazeworldgenerator.handlers.WinHandler
 import world.anhgelus.msmp.basicmazeworldgenerator.utils.Datapack
-import kotlin.math.abs
 
 class SetupListener(private val winHandler: WinHandler): Listener {
 
@@ -51,11 +50,7 @@ class SetupListener(private val winHandler: WinHandler): Listener {
              Bukkit.getOnlinePlayers().forEach {
                  if (handler.isAlreadyWinner(it)) return@forEach
                  val pLoc = it.location
-                 val x = abs(pLoc.blockX)
-                 val z = abs(pLoc.blockZ)
-                 if (!(x > w || z > h)) {
-                     return@forEach
-                 }
+                 if (MazeGenerator.isOutside(pLoc.blockX,pLoc.blockZ)) return@forEach
                  handler.newWinner(it)
              }
         }, 20L, 10L)

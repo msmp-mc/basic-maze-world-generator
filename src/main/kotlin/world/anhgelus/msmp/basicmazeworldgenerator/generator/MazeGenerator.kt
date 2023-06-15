@@ -3,6 +3,7 @@ package world.anhgelus.msmp.basicmazeworldgenerator.generator
 import org.bukkit.generator.ChunkGenerator
 import org.bukkit.generator.WorldInfo
 import java.util.*
+import kotlin.math.abs
 
 
 class MazeGenerator: ChunkGenerator() {
@@ -43,5 +44,9 @@ class MazeGenerator: ChunkGenerator() {
 
     companion object {
         lateinit var parser: MazeParser
+
+        fun isOutside(x: Int, z: Int): Boolean {
+            return abs(x) > parser.width || abs(z) > parser.height
+        }
     }
 }
