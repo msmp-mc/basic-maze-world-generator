@@ -67,20 +67,20 @@ object PlayerListener : Listener {
             event as BlockPlaceEvent
         }
         val loc = e.block.location
+        val y = loc.blockY
+        if (y > 106-3 || y < 64) {
+            e.isCancelled = true
+            return
+        }
         val x = if (loc.blockX < 0) {
             ((loc.blockX%16)+16)%16
         } else {
             loc.blockX%16
         }
-        val y = loc.blockY
         val z = if (loc.blockZ < 0) {
             ((loc.blockZ%16)+16)%16
         } else {
             loc.blockZ%16
-        }
-        if (y < 64) {
-            e.isCancelled = true
-            return
         }
         if (!(x == 0 || x == 15 || z == 0 || z == 15)) {
             return
@@ -92,8 +92,8 @@ object PlayerListener : Listener {
               (x == 15 && cell.wallEast))
             ) {
             return
-        e.isCancelled = true
         }
+        e.isCancelled = true
     }
 
     @EventHandler
