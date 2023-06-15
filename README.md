@@ -39,6 +39,7 @@ worlds:
     generator: BasicMazeWorldGenerator
 ```
 Don't forget to replace the `YOUR_WORLD_NAME` by the name of your world (by default it's `world`).
+Your world's name is the value inside the `level-name` in the `server.properties` file.
 
 ## Docs
 
