@@ -225,7 +225,7 @@ class MazeParser {
             x = 16/2+1
             z = 15
         }
-        if (MazeGenerator.isOutside(abs(x)+1, abs(z)+1)) return
+        if (MazeGenerator.isOutside(abs(x)-1, abs(z)-1)) return
         data.setBlock(x, 67, z, Material.AIR)
         data.setBlock(x, 66, z, Material.AIR)
         armorStands.add(SLocation(x, z, cell))
@@ -249,7 +249,7 @@ class MazeParser {
             armorStands.forEach {
                 if (it.placed) return@forEach
                 val loc = it.toLocation(world)
-                if (MazeGenerator.isOutside(abs(loc.blockX)+1, abs(loc.blockZ)+1)) return@forEach
+                if (MazeGenerator.isOutside(abs(loc.blockX)-1, abs(loc.blockZ)-1)) return@forEach
                 val entity = world.spawnEntity(loc, EntityType.ARMOR_STAND) as ArmorStand
                 val cell = it.cell
                 if (cell.wallSouth) {

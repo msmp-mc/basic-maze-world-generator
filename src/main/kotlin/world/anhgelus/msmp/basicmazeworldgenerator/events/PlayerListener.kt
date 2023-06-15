@@ -1,6 +1,7 @@
 package world.anhgelus.msmp.basicmazeworldgenerator.events
 
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.block.Chest
 import org.bukkit.event.EventHandler
@@ -49,29 +50,35 @@ object PlayerListener : Listener {
 
     @EventHandler
     fun onBreakBlock(event: BlockBreakEvent) {
+        if (event.block.location.blockY < 64) {
+            event.isCancelled = true
+            return
+        }
         blockEvent(event)
     }
 
     @EventHandler
     fun onPlaceBlock(event: BlockPlaceEvent) {
+        if (event.blockPlaced.location.blockY > 106-3) {
+            event.isCancelled = true
+            breakBlock(event)
+            return
+        }
         blockEvent(event)
+    }
+
+    private fun breakBlock(event: BlockPlaceEvent) {
+        val item = event.itemInHand
+        if (event.player.gameMode != GameMode.CREATIVE) item.amount++
+        event.player.inventory.setItemInMainHand(item)
+        event.block.type = Material.AIR
     }
 
     private fun blockEvent(event: BlockEvent) {
         if (!(event is BlockBreakEvent || event is BlockPlaceEvent)) {
             return
         }
-        val e = if (event is BlockBreakEvent) {
-            event
-        } else {
-            event as BlockPlaceEvent
-        }
-        val loc = e.block.location
-        val y = loc.blockY
-        if (y > 106-3 || y < 64) {
-            e.isCancelled = true
-            return
-        }
+        val loc = event.block.location
         val x = if (loc.blockX < 0) {
             ((loc.blockX%16)+16)%16
         } else {
@@ -93,7 +100,8 @@ object PlayerListener : Listener {
             ) {
             return
         }
-        e.isCancelled = true
+        if (event is BlockPlaceEvent) breakBlock(event)
+        else (event as BlockBreakEvent).isCancelled = true
     }
 
     @EventHandler

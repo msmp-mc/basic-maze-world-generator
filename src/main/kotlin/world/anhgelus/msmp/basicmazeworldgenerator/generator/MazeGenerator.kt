@@ -7,9 +7,6 @@ import kotlin.math.abs
 
 
 class MazeGenerator: ChunkGenerator() {
-    init {
-        parser = MazeParser()
-    }
     override fun generateNoise(worldInfo: WorldInfo, random: Random, chunkX: Int, chunkZ: Int, chunkData: ChunkData) {
         parser.placeCell(chunkX,chunkZ,chunkData, random)
     }
@@ -46,7 +43,7 @@ class MazeGenerator: ChunkGenerator() {
         lateinit var parser: MazeParser
 
         fun isOutside(x: Int, z: Int): Boolean {
-            return abs(x) > parser.width || abs(z) > parser.height
+            return abs(x) > parser.width*8 || abs(z) > parser.height*8
         }
     }
 }

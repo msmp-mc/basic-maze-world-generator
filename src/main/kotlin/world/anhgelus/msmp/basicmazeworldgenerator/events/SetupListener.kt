@@ -42,15 +42,12 @@ class SetupListener(private val winHandler: WinHandler): Listener {
 
         MazeParser.placeArmorStands(world)
 
-        val parser = MazeGenerator.parser
-        val w = parser.width*8
-        val h = parser.height*8
         val handler = winHandler.handler
         Bukkit.getScheduler().runTaskTimer(BasicMazeWorldGenerator.INSTANCE, Runnable {
              Bukkit.getOnlinePlayers().forEach {
                  if (handler.isAlreadyWinner(it)) return@forEach
                  val pLoc = it.location
-                 if (MazeGenerator.isOutside(pLoc.blockX,pLoc.blockZ)) return@forEach
+                 if (!MazeGenerator.isOutside(pLoc.blockX,pLoc.blockZ)) return@forEach
                  handler.newWinner(it)
              }
         }, 20L, 10L)
