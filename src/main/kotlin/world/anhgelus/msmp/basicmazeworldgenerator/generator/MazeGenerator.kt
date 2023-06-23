@@ -1,5 +1,6 @@
 package world.anhgelus.msmp.basicmazeworldgenerator.generator
 
+import org.bukkit.Location
 import org.bukkit.generator.ChunkGenerator
 import org.bukkit.generator.WorldInfo
 import java.util.Random
@@ -81,6 +82,10 @@ class MazeGenerator: ChunkGenerator() {
                 e.printStackTrace()
                 return false
             }
+        }
+
+        fun isInHole(location: Location): Boolean {
+            return isInHole(location.chunk.x, location.chunk.z)
         }
     }
 }

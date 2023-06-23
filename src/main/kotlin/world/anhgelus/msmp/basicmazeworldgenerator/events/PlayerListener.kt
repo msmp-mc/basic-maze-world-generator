@@ -13,6 +13,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerPortalEvent
 import world.anhgelus.msmp.basicmazeworldgenerator.generator.MazeGenerator
+import world.anhgelus.msmp.basicmazeworldgenerator.generator.MazeGeneratorException
 import world.anhgelus.msmp.basicmazeworldgenerator.utils.loottables.LootTablesHelper
 
 object PlayerListener : Listener {
@@ -28,6 +29,9 @@ object PlayerListener : Listener {
         val chest = event.clickedBlock!!.state as Chest
         if (chest.lootTable != null) return
         if (openedChests.contains(chest)) return
+        if (MazeGenerator.isInHole(chest.location)) {
+            return
+        }
         var x = chest.location.blockX%16
         var z = chest.location.blockZ%16
         if (x < 0) {
@@ -79,6 +83,9 @@ object PlayerListener : Listener {
             return
         }
         val loc = event.block.location
+        if (MazeGenerator.isInHole(loc)) {
+            return
+        }
         val x = if (loc.blockX < 0) {
             ((loc.blockX%16)+16)%16
         } else {

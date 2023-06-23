@@ -7,6 +7,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntitySpawnEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import world.anhgelus.msmp.basicmazeworldgenerator.generator.MazeGenerator
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.floor
@@ -17,6 +18,9 @@ object MobListener: Listener {
 
     @EventHandler
     fun onMobSpawn(event: EntitySpawnEvent) {
+        if (MazeGenerator.isInHole(event.location)) {
+            return
+        }
         if (event.entity.type != EntityType.ZOMBIE) {
             if (event.entity.type in enabled) return
             event.isCancelled = true
