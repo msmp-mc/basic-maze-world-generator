@@ -5,9 +5,16 @@ import org.bukkit.World
 import world.anhgelus.msmp.basicmazeworldgenerator.BasicMazeWorldGenerator
 import java.io.File
 import java.io.IOException
-import java.nio.file.Paths
 
+/**
+ * Datapack utils
+ */
 object Datapack {
+    /**
+     * Copy the datapack into a world folder
+     *
+     * @return true if the copy was successful
+     */
     fun copyInDir(world: World): Boolean {
         val worldFolder = world.worldFolder
 

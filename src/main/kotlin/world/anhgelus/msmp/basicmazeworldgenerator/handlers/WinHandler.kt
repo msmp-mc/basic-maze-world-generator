@@ -2,6 +2,12 @@ package world.anhgelus.msmp.basicmazeworldgenerator.handlers
 
 import world.anhgelus.msmp.basicmazeworldgenerator.api.WinningHandler
 
+/**
+ * Basic types of win handlers
+ *
+ * @param id The id of the handler
+ * @param handler The handler
+ */
 enum class WinHandler(val id: Int, val handler: WinningHandler) {
     ONE_WINNER(0, XWinnersHandler(1)),
     TWO_WINNERS(5, XWinnersHandler(2)),

@@ -7,10 +7,10 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntitySpawnEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import world.anhgelus.msmp.basicmazeworldgenerator.generator.MazeGenerator
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.floor
-import kotlin.math.sqrt
 
 object MobListener: Listener {
 
@@ -18,6 +18,9 @@ object MobListener: Listener {
 
     @EventHandler
     fun onMobSpawn(event: EntitySpawnEvent) {
+        if (!SetupListener.isGenerated()) return
+        val wName = event.location.world!!.name
+        if (wName.endsWith("_nether") || wName.endsWith("_the_end") || MazeGenerator.isInHole(event.location)) return
         if (event.entity.type != EntityType.ZOMBIE) {
             if (event.entity.type in enabled) return
             event.isCancelled = true

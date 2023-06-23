@@ -27,6 +27,9 @@ class MazeParser {
         private set
     var height = 0
         private set
+    var disabledSize = 0
+        private set
+    private val disabledCellsLoc = mutableListOf<Pair<Int,Int>>()
 
 
     init {
@@ -51,37 +54,46 @@ class MazeParser {
         val cells = mutableListOf<Cell>()
         height = lines.size -1
         width = (lines[0].length - 2)/2 + 1
+        var niceLine= 0
         for ((z, line) in lines.withIndex()) {
             if (z == 0) {
                 continue
             }
             for ((x, char) in line.withIndex()) {
-                if (x%2 == 0 || char == '|') {
+                if (x%2 == 0 || char == '|' || char == '-') {
                     continue
                 }
+                // x = 2*(nX-1)
+                // ((x-1)/2) = nX
+                val nX = ((x-1)/2)
+                val fX = nX - width/2
+                val fZ = -(z - height/2)
+
+                if (char == 'X') {
+                    if (niceLine == 0) niceLine = z
+                    cells.add(Cell(fX, fZ, true))
+                    disabledCellsLoc.add(Pair(fX,fZ))
+                    if (niceLine == z) disabledSize++
+                    continue
+                }
+
                 val wSouth = char == '_'
                 var wEast = false
                 var wWest = false
                 var wTop = false
 
                 val previous = line[x-1]
-                if (previous == '|') wWest = true
+                if (previous == '|' || previous == '-') wWest = true
 
                 if (x != line.length-1) {
                     val next = line[x+1]
-                    if (next == '|') wEast = true
+                    if (next == '|' || next == '-') wEast = true
                 }
 
                 if (z != lines.size-1) {
-                    val previousLine = lines[z-1]
-                    if (previousLine[x] == '_') wTop = true
+                    val c = lines[z-1][x]
+                    if (c == '_' || c == 'X') wTop = true
                 }
-
-                // x = 2*(nX-1)
-                // ((x-1)/2) = nX
-                val nX = ((x-1)/2)
-                val fX = nX - width/2
-                val fZ = -(z - height/2)
                 cells.add(Cell(fX, fZ, wTop, wSouth, wWest, wEast))
             }
         }
@@ -92,17 +104,34 @@ class MazeParser {
     }
 
     /**
-     * Place a cell at the given coordinates
+     * Check if the cell is disabled with its coordinates
      *
      * @param x the x coordinate of the chunk
      * @param z the z coordinate of the chunk
+     * @return true if the cell is disabled, false otherwise
+     */
+    fun isCellDisabled(x: Int, z: Int): Boolean {
+        return disabledCellsLoc.contains(Pair(x,z))
+    }
+
+    /**
+     * Place a cell at the given coordinates
+     *
+     * @param chunkX the x coordinate of the chunk
+     * @param chunkZ the z coordinate of the chunk
      * @param data the chunk data
+     * @param random the random generator
      */
     fun placeCell(chunkX: Int, chunkZ: Int, data: ChunkData, random: Random) {
-        if (!(chunkX in -(width/2) until width/2 && chunkZ in -(height/2) until height/2)) {
+        if (MazeGenerator.isChunkOutside(chunkX, chunkZ)) {
+            BasicMazeWorldGenerator.LOGGER.warning("Cell at $chunkX $chunkZ is outside!")
             return
         }
         val cell = getCell(chunkX,chunkZ)
+        if (cell.disabled) {
+            BasicMazeWorldGenerator.LOGGER.warning("Cell at $chunkX $chunkZ is disabled!")
+            return
+        }
         for (x in 0..15) {
             for (z in 0..15) {
                 for (y in data.minHeight until 65) {
@@ -191,12 +220,9 @@ class MazeParser {
      * @throws MazeGeneratorException if the cell is not found
      */
     fun getCell(x: Int, z: Int): Cell {
-        for (cell in cells) {
-            if (cell.x == x && cell.z == z) {
-                return cell
-            }
-        }
-        throw MazeGeneratorException("Cell not found at $x, $z")
+        return cells.find {
+            it.x == x && it.z == z
+        } ?: throw MazeGeneratorException("Cell not found at $x, $z")
     }
 
     /**
@@ -225,13 +251,13 @@ class MazeParser {
             x = 16/2+1
             z = 15
         }
-        if (MazeGenerator.isOutside(abs(x)-1, abs(z)-1)) return
+        if (MazeGenerator.isBlockOutside(abs(x)-1, abs(z)-1)) return
         data.setBlock(x, 67, z, Material.AIR)
         data.setBlock(x, 66, z, Material.AIR)
         armorStands.add(SLocation(x, z, cell))
     }
 
-    data class SLocation(val x: Int, val z: Int, val cell: Cell, var placed: Boolean = false) {
+    data class SLocation(val x: Int, val z: Int, val cell: Cell) {
         fun toLocation(world: World): Location {
             return cell.relativeToAbsoluteLocation(world, x.toFloat(), 66f, z.toFloat())
         }
@@ -246,10 +272,10 @@ class MazeParser {
          * @param world The world
          */
         fun placeArmorStands(world: World) {
+            val placed = mutableListOf<SLocation>()
             armorStands.forEach {
-                if (it.placed) return@forEach
                 val loc = it.toLocation(world)
-                if (MazeGenerator.isOutside(abs(loc.blockX)-1, abs(loc.blockZ)-1)) return@forEach
+                if (MazeGenerator.isBlockOutside(abs(loc.blockX)-1, abs(loc.blockZ)-1)) return@forEach
                 val entity = world.spawnEntity(loc, EntityType.ARMOR_STAND) as ArmorStand
                 val cell = it.cell
                 if (cell.wallSouth) {
@@ -277,7 +303,10 @@ class MazeParser {
                 data.setColor(color.color)
                 item.itemMeta = data
                 entity.equipment!!.helmet = item
-                it.placed = true
+                placed.add(it)
+            }
+            placed.forEach {
+                armorStands.remove(it)
             }
         }
     }

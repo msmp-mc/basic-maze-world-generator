@@ -13,6 +13,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerPortalEvent
 import world.anhgelus.msmp.basicmazeworldgenerator.generator.MazeGenerator
+import world.anhgelus.msmp.basicmazeworldgenerator.generator.MazeGeneratorException
 import world.anhgelus.msmp.basicmazeworldgenerator.utils.loottables.LootTablesHelper
 
 object PlayerListener : Listener {
@@ -23,10 +24,13 @@ object PlayerListener : Listener {
 
     @EventHandler
     fun onChestOpen(event: PlayerInteractEvent) {
+        val wName = event.player.location.world!!.name
+        if (wName.endsWith("_nether") || wName.endsWith("_the_end")) return
         if (event.clickedBlock == null) return
         if (event.clickedBlock?.type != Material.CHEST) return
         val chest = event.clickedBlock!!.state as Chest
         if (chest.lootTable != null) return
+        if (MazeGenerator.isInHole(chest.location)) return
         if (openedChests.contains(chest)) return
         var x = chest.location.blockX%16
         var z = chest.location.blockZ%16
@@ -50,6 +54,7 @@ object PlayerListener : Listener {
 
     @EventHandler
     fun onBreakBlock(event: BlockBreakEvent) {
+        if (MazeGenerator.isInHole(event.block.location)) return
         if (event.block.location.blockY < 64) {
             event.isCancelled = true
             return
@@ -59,6 +64,7 @@ object PlayerListener : Listener {
 
     @EventHandler
     fun onPlaceBlock(event: BlockPlaceEvent) {
+        if (MazeGenerator.isInHole(event.block.location)) return
         if (event.blockPlaced.location.blockY > 106-3) {
             event.isCancelled = true
             breakBlock(event)
