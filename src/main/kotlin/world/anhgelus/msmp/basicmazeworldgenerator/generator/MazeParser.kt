@@ -65,10 +65,11 @@ class MazeParser {
                 val fX = nX - width/2
                 val fZ = -(z - height/2)
 
-                val disabled = char == 'X'
-                if (disabled) {
-                    cells.add(Cell(fX, fZ, wallTop = true, wallSouth = true, wallWest = true, wallEast = true, disabled = true))
+                if (char == 'X') {
+                    cells.add(Cell(fX, fZ, true))
+                    continue
                 }
+
                 val wSouth = char == '_'
                 var wEast = false
                 var wWest = false
@@ -86,7 +87,7 @@ class MazeParser {
                     val c = lines[z-1][x]
                     if (c == '_' || c == 'X') wTop = true
                 }
-                cells.add(Cell(fX, fZ, wTop, wSouth, wWest, wEast, false))
+                cells.add(Cell(fX, fZ, wTop, wSouth, wWest, wEast))
             }
         }
         if (cells.size != width*height) {
@@ -104,10 +105,12 @@ class MazeParser {
      */
     fun placeCell(chunkX: Int, chunkZ: Int, data: ChunkData, random: Random) {
         if (!(chunkX in -(width/2) until width/2 && chunkZ in -(height/2) until height/2)) {
+            BasicMazeWorldGenerator.LOGGER.warning("Cell at $chunkX $chunkZ is outside!")
             return
         }
         val cell = getCell(chunkX,chunkZ)
         if (cell.disabled) {
+            BasicMazeWorldGenerator.LOGGER.warning("Cell at $chunkX $chunkZ is disabled!")
             return
         }
         for (x in 0..15) {
@@ -232,7 +235,7 @@ class MazeParser {
             x = 16/2+1
             z = 15
         }
-        if (MazeGenerator.isOutside(abs(x)-1, abs(z)-1)) return
+        if (MazeGenerator.isBlockOutside(abs(x)-1, abs(z)-1)) return
         data.setBlock(x, 67, z, Material.AIR)
         data.setBlock(x, 66, z, Material.AIR)
         armorStands.add(SLocation(x, z, cell))
@@ -256,7 +259,7 @@ class MazeParser {
             armorStands.forEach {
                 if (it.placed) return@forEach
                 val loc = it.toLocation(world)
-                if (MazeGenerator.isOutside(abs(loc.blockX)-1, abs(loc.blockZ)-1)) return@forEach
+                if (MazeGenerator.isBlockOutside(abs(loc.blockX)-1, abs(loc.blockZ)-1)) return@forEach
                 val entity = world.spawnEntity(loc, EntityType.ARMOR_STAND) as ArmorStand
                 val cell = it.cell
                 if (cell.wallSouth) {

@@ -24,6 +24,11 @@ data class Cell(
     val wallEast: Boolean,
     val disabled: Boolean,
 ) {
+
+    constructor(x: Int, z: Int, disabled: Boolean): this(x, z, true, true, true, true, disabled)
+    constructor(x: Int, z: Int, wallTop: Boolean, wallSouth: Boolean, wallWest: Boolean, wallEast: Boolean):
+            this(x, z, wallTop, wallSouth, wallWest, wallEast, false)
+
     /**
      * Calculates the distance to the center of the maze
      *

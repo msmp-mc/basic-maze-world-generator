@@ -47,7 +47,7 @@ class SetupListener(private val winHandler: WinHandler): Listener {
              Bukkit.getOnlinePlayers().forEach {
                  if (handler.isAlreadyWinner(it)) return@forEach
                  val pLoc = it.location
-                 if (!MazeGenerator.isOutside(pLoc.blockX,pLoc.blockZ)) return@forEach
+                 if (!MazeGenerator.isBlockOutside(pLoc.blockX,pLoc.blockZ)) return@forEach
                  handler.newWinner(it)
              }
         }, 20L, 10L)
