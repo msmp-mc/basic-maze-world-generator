@@ -11,6 +11,7 @@ data class Cell(
     val wallSouth: Boolean,
     val wallWest: Boolean,
     val wallEast: Boolean,
+    val disabled: Boolean,
 ) {
     fun distToCenter(): Int {
         return 16*(abs(x) + abs(z))

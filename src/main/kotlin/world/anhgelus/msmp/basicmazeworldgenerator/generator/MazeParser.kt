@@ -56,8 +56,18 @@ class MazeParser {
                 continue
             }
             for ((x, char) in line.withIndex()) {
-                if (x%2 == 0 || char == '|') {
+                if (x%2 == 0 || char == '|' || char == '-') {
                     continue
+                }
+                // x = 2*(nX-1)
+                // ((x-1)/2) = nX
+                val nX = ((x-1)/2)
+                val fX = nX - width/2
+                val fZ = -(z - height/2)
+
+                val disabled = char == 'X'
+                if (disabled) {
+                    cells.add(Cell(fX, fZ, wallTop = true, wallSouth = true, wallWest = true, wallEast = true, disabled = true))
                 }
                 val wSouth = char == '_'
                 var wEast = false
@@ -65,24 +75,18 @@ class MazeParser {
                 var wTop = false
 
                 val previous = line[x-1]
-                if (previous == '|') wWest = true
+                if (previous == '|' || previous == '-') wWest = true
 
                 if (x != line.length-1) {
                     val next = line[x+1]
-                    if (next == '|') wEast = true
+                    if (next == '|' || next == '-') wEast = true
                 }
 
                 if (z != lines.size-1) {
-                    val previousLine = lines[z-1]
-                    if (previousLine[x] == '_') wTop = true
+                    val c = lines[z-1][x]
+                    if (c == '_' || c == 'X') wTop = true
                 }
-
-                // x = 2*(nX-1)
-                // ((x-1)/2) = nX
-                val nX = ((x-1)/2)
-                val fX = nX - width/2
-                val fZ = -(z - height/2)
-                cells.add(Cell(fX, fZ, wTop, wSouth, wWest, wEast))
+                cells.add(Cell(fX, fZ, wTop, wSouth, wWest, wEast, false))
             }
         }
         if (cells.size != width*height) {
@@ -103,6 +107,9 @@ class MazeParser {
             return
         }
         val cell = getCell(chunkX,chunkZ)
+        if (cell.disabled) {
+            return
+        }
         for (x in 0..15) {
             for (z in 0..15) {
                 for (y in data.minHeight until 65) {

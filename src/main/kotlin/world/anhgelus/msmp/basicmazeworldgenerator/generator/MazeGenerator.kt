@@ -11,32 +11,29 @@ class MazeGenerator: ChunkGenerator() {
         parser.placeCell(chunkX,chunkZ,chunkData, random)
     }
 
-    override fun shouldGenerateMobs(worldInfo: WorldInfo, random: Random, chunkX: Int, chunkZ: Int): Boolean {
-        return false
+    override fun shouldGenerateNoise(worldInfo: WorldInfo, random: Random, chunkX: Int, chunkZ: Int): Boolean {
+        return shouldGenerate(chunkX, chunkZ)
     }
 
-    override fun shouldGenerateNoise(): Boolean {
-        return false
+    override fun shouldGenerateSurface(worldInfo: WorldInfo, random: Random, chunkX: Int, chunkZ: Int): Boolean {
+        return shouldGenerate(chunkX, chunkZ)
     }
 
-    override fun shouldGenerateSurface(): Boolean {
-        return false
+    override fun shouldGenerateCaves(worldInfo: WorldInfo, random: Random, chunkX: Int, chunkZ: Int): Boolean {
+        return shouldGenerate(chunkX, chunkZ)
     }
 
-    override fun shouldGenerateCaves(): Boolean {
-        return false
+    override fun shouldGenerateDecorations(worldInfo: WorldInfo, random: Random, chunkX: Int, chunkZ: Int): Boolean {
+        return shouldGenerate(chunkX, chunkZ)
     }
 
-    override fun shouldGenerateDecorations(): Boolean {
-        return false
+    override fun shouldGenerateStructures(worldInfo: WorldInfo, random: Random, chunkX: Int, chunkZ: Int): Boolean {
+        return shouldGenerate(chunkX, chunkZ)
     }
 
-    override fun shouldGenerateMobs(): Boolean {
-        return false
-    }
-
-    override fun shouldGenerateStructures(): Boolean {
-        return false
+    private fun shouldGenerate(chunkX: Int, chunkZ: Int): Boolean {
+        if (isOutside(chunkX, chunkZ)) return false
+        return isInHole(chunkX, chunkZ)
     }
 
     companion object {
@@ -44,6 +41,12 @@ class MazeGenerator: ChunkGenerator() {
 
         fun isOutside(x: Int, z: Int): Boolean {
             return abs(x) > parser.width*8 || abs(z) > parser.height*8
+        }
+
+        fun isInHole(x: Int, z: Int): Boolean {
+            parser.getCell(x/8,z/8).let {
+                return !it.disabled
+            }
         }
     }
 }
