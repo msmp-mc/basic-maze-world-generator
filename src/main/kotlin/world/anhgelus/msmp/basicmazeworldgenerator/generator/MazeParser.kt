@@ -257,7 +257,7 @@ class MazeParser {
         armorStands.add(SLocation(x, z, cell))
     }
 
-    data class SLocation(val x: Int, val z: Int, val cell: Cell, var placed: Boolean = false) {
+    data class SLocation(val x: Int, val z: Int, val cell: Cell) {
         fun toLocation(world: World): Location {
             return cell.relativeToAbsoluteLocation(world, x.toFloat(), 66f, z.toFloat())
         }
@@ -272,8 +272,8 @@ class MazeParser {
          * @param world The world
          */
         fun placeArmorStands(world: World) {
+            val placed = mutableListOf<SLocation>()
             armorStands.forEach {
-                if (it.placed) return@forEach
                 val loc = it.toLocation(world)
                 if (MazeGenerator.isBlockOutside(abs(loc.blockX)-1, abs(loc.blockZ)-1)) return@forEach
                 val entity = world.spawnEntity(loc, EntityType.ARMOR_STAND) as ArmorStand
@@ -303,7 +303,10 @@ class MazeParser {
                 data.setColor(color.color)
                 item.itemMeta = data
                 entity.equipment!!.helmet = item
-                it.placed = true
+                placed.add(it)
+            }
+            placed.forEach {
+                armorStands.remove(it)
             }
         }
     }

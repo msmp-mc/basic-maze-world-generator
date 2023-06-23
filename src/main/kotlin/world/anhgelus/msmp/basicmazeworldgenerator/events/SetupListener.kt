@@ -51,11 +51,16 @@ class SetupListener(private val winHandler: WinHandler): Listener {
         }, 20L, 10L)
     }
 
+    private var isGenerating = false
+
     @EventHandler
     fun onChunkLoad(event: ChunkLoadEvent) {
+        if (isGenerating) return
         if (!generated) return
         if (event.chunk.world.name.endsWith("_nether") || event.chunk.world.name.endsWith("_the_end")) return
+        isGenerating = true
         if (event.isNewChunk) MazeParser.placeArmorStands(event.chunk.world)
+        isGenerating = false
     }
 
     companion object {
