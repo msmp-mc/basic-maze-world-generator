@@ -4,6 +4,17 @@ import org.bukkit.Location
 import org.bukkit.World
 import kotlin.math.abs
 
+/**
+ * Represents a cell in the maze
+ *
+ * @param x The x coordinate of the cell
+ * @param z The z coordinate of the cell
+ * @param wallTop Whether the cell has a wall on the top
+ * @param wallSouth Whether the cell has a wall on the south
+ * @param wallWest Whether the cell has a wall on the west
+ * @param wallEast Whether the cell has a wall on the east
+ * @param disabled Whether the cell is disabled
+ */
 data class Cell(
     val x: Int,
     val z: Int,
@@ -13,10 +24,24 @@ data class Cell(
     val wallEast: Boolean,
     val disabled: Boolean,
 ) {
+    /**
+     * Calculates the distance to the center of the maze
+     *
+     * @return the dist to the center
+     */
     fun distToCenter(): Int {
         return 16*(abs(x) + abs(z))
     }
 
+    /**
+     * Converts relative coordinates of a cell into absolute coordinates
+     *
+     * @param world the world to convert to
+     * @param x the relative x coordinate
+     * @param y the relative y coordinate
+     * @param z the relative z coordinate
+     * @return the absolute location
+     */
     fun relativeToAbsoluteLocation(world: World, x: Float, y: Float, z: Float): Location {
         val cX = if (x < 0) {
             (this.x-1)*16+x

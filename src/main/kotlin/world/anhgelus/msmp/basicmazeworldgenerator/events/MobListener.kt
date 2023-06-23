@@ -10,7 +10,6 @@ import org.bukkit.potion.PotionEffectType
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.floor
-import kotlin.math.sqrt
 
 object MobListener: Listener {
 

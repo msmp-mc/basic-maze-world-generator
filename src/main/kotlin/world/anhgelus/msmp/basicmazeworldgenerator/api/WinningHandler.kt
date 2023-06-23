@@ -9,12 +9,18 @@ import world.anhgelus.msmp.msmpcore.player.MPlayer
 import world.anhgelus.msmp.msmpcore.player.MPlayerManager
 import world.anhgelus.msmp.msmpcore.utils.ChatHelper
 
+/**
+ * Base of the winning handlers
+ */
 abstract class WinningHandler {
     /**
      * Winners list (Place, Player)
      */
     protected val winners: MutableMap<Int, MPlayer> = mutableMapOf()
 
+    /**
+     * One of the possible exit location
+     */
     protected lateinit var exitLocation: Location
 
     /**
@@ -33,6 +39,11 @@ abstract class WinningHandler {
         newWinner(MPlayerManager.get(player))
     }
 
+    /**
+     * Get the winners map
+     *
+     * @return The winners map (Place, Player)
+     */
     fun getWinnersMap(): Map<Int, MPlayer> {
         return winners
     }
@@ -55,6 +66,9 @@ abstract class WinningHandler {
         return winners.containsValue(MPlayerManager.get(player))
     }
 
+    /**
+     * Handle the end of the game
+     */
     protected open fun end() {
         ChatHelper.sendSuccess("End of the game!")
         Bukkit.getOnlinePlayers().forEach {
