@@ -27,6 +27,9 @@ class MazeParser {
         private set
     var height = 0
         private set
+    var disabledSize = 0
+        private set
+    private val disabledCellsLoc = mutableListOf<Pair<Int,Int>>()
 
 
     init {
@@ -51,6 +54,7 @@ class MazeParser {
         val cells = mutableListOf<Cell>()
         height = lines.size -1
         width = (lines[0].length - 2)/2 + 1
+        var niceLine= 0
         for ((z, line) in lines.withIndex()) {
             if (z == 0) {
                 continue
@@ -66,7 +70,10 @@ class MazeParser {
                 val fZ = -(z - height/2)
 
                 if (char == 'X') {
+                    if (niceLine == 0) niceLine = z
                     cells.add(Cell(fX, fZ, true))
+                    disabledCellsLoc.add(Pair(fX,fZ))
+                    if (niceLine == z) disabledSize++
                     continue
                 }
 
@@ -97,14 +104,26 @@ class MazeParser {
     }
 
     /**
-     * Place a cell at the given coordinates
+     * Check if the cell is disabled with its coordinates
      *
      * @param x the x coordinate of the chunk
      * @param z the z coordinate of the chunk
+     * @return true if the cell is disabled, false otherwise
+     */
+    fun isCellDisabled(x: Int, z: Int): Boolean {
+        return disabledCellsLoc.contains(Pair(x,z))
+    }
+
+    /**
+     * Place a cell at the given coordinates
+     *
+     * @param chunkX the x coordinate of the chunk
+     * @param chunkZ the z coordinate of the chunk
      * @param data the chunk data
+     * @param random the random generator
      */
     fun placeCell(chunkX: Int, chunkZ: Int, data: ChunkData, random: Random) {
-        if (!(chunkX in -(width/2) until width/2 && chunkZ in -(height/2) until height/2)) {
+        if (MazeGenerator.isChunkOutside(chunkX, chunkZ)) {
             BasicMazeWorldGenerator.LOGGER.warning("Cell at $chunkX $chunkZ is outside!")
             return
         }
@@ -201,12 +220,9 @@ class MazeParser {
      * @throws MazeGeneratorException if the cell is not found
      */
     fun getCell(x: Int, z: Int): Cell {
-        for (cell in cells) {
-            if (cell.x == x && cell.z == z) {
-                return cell
-            }
-        }
-        throw MazeGeneratorException("Cell not found at $x, $z")
+        return cells.find {
+            it.x == x && it.z == z
+        } ?: throw MazeGeneratorException("Cell not found at $x, $z")
     }
 
     /**

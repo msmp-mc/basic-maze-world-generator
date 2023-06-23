@@ -16,8 +16,6 @@ import world.anhgelus.msmp.basicmazeworldgenerator.utils.Datapack
 
 class SetupListener(private val winHandler: WinHandler): Listener {
 
-    private var generated = false
-
     @EventHandler
     fun onWorldGenerationComplete(event: WorldLoadEvent) {
         if (generated) return
@@ -40,7 +38,7 @@ class SetupListener(private val winHandler: WinHandler): Listener {
         }
         world.setSpawnLocation(loc)
 
-        MazeParser.placeArmorStands(world)
+//        MazeParser.placeArmorStands(world)
 
         val handler = winHandler.handler
         Bukkit.getScheduler().runTaskTimer(BasicMazeWorldGenerator.INSTANCE, Runnable {
@@ -55,6 +53,17 @@ class SetupListener(private val winHandler: WinHandler): Listener {
 
     @EventHandler
     fun onChunkLoad(event: ChunkLoadEvent) {
+        if (!generated) return
+        if (event.chunk.world.name.endsWith("_nether") || event.chunk.world.name.endsWith("_the_end")) return
         if (event.isNewChunk) MazeParser.placeArmorStands(event.chunk.world)
     }
+
+    companion object {
+        private var generated = false
+
+        fun isGenerated(): Boolean {
+            return generated
+        }
+    }
+
 }

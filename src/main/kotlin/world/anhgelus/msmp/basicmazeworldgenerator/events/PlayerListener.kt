@@ -24,14 +24,14 @@ object PlayerListener : Listener {
 
     @EventHandler
     fun onChestOpen(event: PlayerInteractEvent) {
+        val wName = event.player.location.world!!.name
+        if (wName.endsWith("_nether") || wName.endsWith("_the_end")) return
         if (event.clickedBlock == null) return
         if (event.clickedBlock?.type != Material.CHEST) return
         val chest = event.clickedBlock!!.state as Chest
         if (chest.lootTable != null) return
+        if (MazeGenerator.isInHole(chest.location)) return
         if (openedChests.contains(chest)) return
-        if (MazeGenerator.isInHole(chest.location)) {
-            return
-        }
         var x = chest.location.blockX%16
         var z = chest.location.blockZ%16
         if (x < 0) {
@@ -54,6 +54,7 @@ object PlayerListener : Listener {
 
     @EventHandler
     fun onBreakBlock(event: BlockBreakEvent) {
+        if (MazeGenerator.isInHole(event.block.location)) return
         if (event.block.location.blockY < 64) {
             event.isCancelled = true
             return
@@ -63,6 +64,7 @@ object PlayerListener : Listener {
 
     @EventHandler
     fun onPlaceBlock(event: BlockPlaceEvent) {
+        if (MazeGenerator.isInHole(event.block.location)) return
         if (event.blockPlaced.location.blockY > 106-3) {
             event.isCancelled = true
             breakBlock(event)
@@ -83,9 +85,6 @@ object PlayerListener : Listener {
             return
         }
         val loc = event.block.location
-        if (MazeGenerator.isInHole(loc)) {
-            return
-        }
         val x = if (loc.blockX < 0) {
             ((loc.blockX%16)+16)%16
         } else {

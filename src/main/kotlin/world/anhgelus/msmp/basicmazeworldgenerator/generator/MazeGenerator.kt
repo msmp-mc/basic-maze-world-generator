@@ -1,39 +1,42 @@
 package world.anhgelus.msmp.basicmazeworldgenerator.generator
 
+import org.bukkit.Chunk
 import org.bukkit.Location
 import org.bukkit.generator.ChunkGenerator
 import org.bukkit.generator.WorldInfo
-import java.util.Random
+import java.util.*
 import kotlin.math.abs
 
 
 class MazeGenerator: ChunkGenerator() {
     override fun generateNoise(worldInfo: WorldInfo, random: Random, chunkX: Int, chunkZ: Int, chunkData: ChunkData) {
-        if (isInHole(chunkX, chunkZ) || isBlockOutside(chunkX, chunkZ)) return
+        if (worldInfo.name.endsWith("_nether") || worldInfo.name.endsWith("_the_end")) return
+        if (isInHole(chunkX, chunkZ) || isChunkOutside(chunkX, chunkZ)) return
         parser.placeCell(chunkX,chunkZ,chunkData, random)
     }
 
     override fun shouldGenerateNoise(worldInfo: WorldInfo, random: Random, chunkX: Int, chunkZ: Int): Boolean {
-        return shouldGenerate(chunkX, chunkZ)
+        return shouldGenerate(worldInfo, chunkX, chunkZ)
     }
 
     override fun shouldGenerateSurface(worldInfo: WorldInfo, random: Random, chunkX: Int, chunkZ: Int): Boolean {
-        return shouldGenerate(chunkX, chunkZ)
+        return shouldGenerate(worldInfo, chunkX, chunkZ)
     }
 
     override fun shouldGenerateCaves(worldInfo: WorldInfo, random: Random, chunkX: Int, chunkZ: Int): Boolean {
-        return shouldGenerate(chunkX, chunkZ)
+        return shouldGenerate(worldInfo, chunkX, chunkZ)
     }
 
     override fun shouldGenerateDecorations(worldInfo: WorldInfo, random: Random, chunkX: Int, chunkZ: Int): Boolean {
-        return shouldGenerate(chunkX, chunkZ)
+        return shouldGenerate(worldInfo, chunkX, chunkZ)
     }
 
     override fun shouldGenerateStructures(worldInfo: WorldInfo, random: Random, chunkX: Int, chunkZ: Int): Boolean {
-        return shouldGenerate(chunkX, chunkZ)
+        return shouldGenerate(worldInfo, chunkX, chunkZ)
     }
 
-    private fun shouldGenerate(chunkX: Int, chunkZ: Int): Boolean {
+    private fun shouldGenerate(worldInfo: WorldInfo, chunkX: Int, chunkZ: Int): Boolean {
+        if (worldInfo.name.endsWith("_nether") || worldInfo.name.endsWith("_the_end")) return false
         if (isChunkOutside(chunkX, chunkZ)) return false
         return isInHole(chunkX, chunkZ)
     }
@@ -73,19 +76,16 @@ class MazeGenerator: ChunkGenerator() {
         }
 
         fun isInHole(x: Int, z: Int): Boolean {
-            if (isChunkOutside(x,z)) return false
-            try {
-                parser.getCell(x, z).let {
-                    return it.disabled
-                }
-            } catch (e: MazeGeneratorException) {
-                e.printStackTrace()
-                return false
-            }
+            if (isChunkOutside(x, z)) return false
+            return parser.isCellDisabled(x, z)
         }
 
         fun isInHole(location: Location): Boolean {
-            return isInHole(location.chunk.x, location.chunk.z)
+            return isInHole(location.chunk)
+        }
+
+        fun isInHole(chunk: Chunk): Boolean {
+            return isInHole(chunk.x, chunk.z)
         }
     }
 }
